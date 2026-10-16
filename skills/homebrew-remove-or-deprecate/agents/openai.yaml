@@ -1,0 +1,5 @@
+---
+interface:
+  display_name: "Remove or Deprecate a Homebrew Formula or Cask"
+  short_description: "Retire exact formulae or casks and preserve viable alternatives"
+  default_prompt: "Use $homebrew-remove-or-deprecate to retire exact formulae or casks and verify the tap."

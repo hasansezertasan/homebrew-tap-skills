@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "deprecate-formula-keep-cask",
+      "description": "Deprecate the formula, keep the same-named cask, and account for automation.",
+      "prompt": "Upstream stopped maintaining the Python CLI 'widget', but its macOS app is still released. This tap has both Formula/widget.rb and Casks/widget.rb. I want to retire the CLI only. What do I do? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Confirms the outcome (deprecate, disable or remove) with the user rather than guessing, and explains deprecation keeps it installable while disabling blocks installation."
+        },
+        {
+          "text": "Edits only Formula/widget.rb with a deprecate! line (date and because) and keeps Casks/widget.rb, livecheck and any extras marker intact."
+        },
+        {
+          "text": "Notes the weekly formula update job skips deprecated formulae but the weekly cask job and the dispatch workflows do not, and that a dispatching producer must be coordinated."
+        },
+        {
+          "text": "Regenerates the README catalog and finishes with homebrew-verify."
+        }
+      ],
+      "tags": [
+        "homebrew-remove-or-deprecate",
+        "deprecate",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "removal-needs-no-bottle-build",
+      "description": "A removal-only change needs the local gate, not a fresh build, and does not uninstall anything.",
+      "prompt": "I want to delete Formula/widget.rb from this tap because the project is gone. Do I need to build bottles or run install tests, and what happens to people who have it installed? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says a removal-only change normally needs the local gate (mise run check, README regeneration) rather than a fresh build or install test, and records that installation was not exercised."
+        },
+        {
+          "text": "Says deleting the file does not uninstall or migrate existing installs, and does not promise an absolute install prohibition."
+        },
+        {
+          "text": "Searches for reverse references (depends_on, conflicts_with, README prose, pending update PRs, dispatching producers) before deleting."
+        }
+      ],
+      "tags": [
+        "homebrew-remove-or-deprecate",
+        "removal",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

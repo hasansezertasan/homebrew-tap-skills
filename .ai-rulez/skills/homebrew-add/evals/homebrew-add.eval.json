@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "formula-vs-cask-route",
+      "description": "Choose formula or cask from what upstream publishes and use the bundled scaffolders, not brew create or hand-written resources.",
+      "prompt": "I want to add the tool 'widget' to this tap. Upstream publishes it on PyPI as a CLI and also ships a prebuilt macOS dmg on GitHub releases (owner/widget). Which commands do I run? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Runs the scaffolders bundled with the skill (add_formula.py and add_cask.py) from the tap checkout, and does not use brew create or hand-write a formula or resource blocks."
+        },
+        {
+          "text": "Makes both a formula and a cask because upstream ships both, and notes that the same name makes plain brew install ambiguous, so the README needs a --formula versus --cask note."
+        },
+        {
+          "text": "Runs the README catalog regeneration (mise run generate-readme) and hands off to homebrew-verify before a PR."
+        },
+        {
+          "text": "Keeps one item per pull request and does not push to main."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "formula-human-checks",
+      "description": "Name the generated fields a human must check on a new formula and preserve the extras marker.",
+      "prompt": "I scaffolded a formula for the PyPI package 'widget' with --extras tui. What do I still have to check before opening the PR? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says the test command is a guess (the generated test assumes --version) and must be checked against the real CLI, using --test-command when it differs."
+        },
+        {
+          "text": "Flags the TODO-set-SPDX-license marker and system libraries as needing manual attention."
+        },
+        {
+          "text": "Explains the homebrew-tap:extras comment must be kept because the update workflows read it, otherwise the first bump drops extras-only resources."
+        },
+        {
+          "text": "Does not claim the formula is verified from scaffolding alone and defers audit, build and test evidence to homebrew-verify."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "formula",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "cask-pkg-and-seed",
+      "description": "Handle a pkg asset and a not-yet-released app correctly.",
+      "prompt": "The upstream project ships its macOS app only as a .pkg, and a second project I want to add has no GitHub release yet. How do I add each as a cask? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Requires --pkg-id for the .pkg asset and explains that brew audit --cask --strict rejects a pkg stanza without uninstall pkgutil."
+        },
+        {
+          "text": "Uses --seed for the unreleased project and explains the placeholder version and checksum are filled by the first brew bump-cask-pr."
+        },
+        {
+          "text": "Does not call the seeded cask installable or verified, and hands off to homebrew-verify."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "cask",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

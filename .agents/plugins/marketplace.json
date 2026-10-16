@@ -1,0 +1,20 @@
+{
+  "name": "homebrew-tap-skills",
+  "interface": {
+    "displayName": "homebrew-tap-skills"
+  },
+  "plugins": [
+    {
+      "name": "homebrew-tap-skills",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

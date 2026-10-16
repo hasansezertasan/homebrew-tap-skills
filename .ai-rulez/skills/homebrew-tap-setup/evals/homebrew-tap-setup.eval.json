@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "render-and-configure",
+      "description": "Render with Copier, name the repository homebrew-<tap>, configure Actions, and keep rendering separate from settings and secrets.",
+      "prompt": "Set up a new Homebrew tap for me from the template, and tell me what I need to configure. This is a desk exercise: do not edit anything, create a repository, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the template files and workflows you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Renders copier-homebrew-tap with Copier (copier copy), not a GitHub template repository, and commits .copier-answers.yml."
+        },
+        {
+          "text": "Says the repository must be named homebrew-<tap> so brew tap owner/tap resolves to it."
+        },
+        {
+          "text": "Lists Actions settings: keep default workflow permissions read-only and allow Actions to create and approve pull requests."
+        },
+        {
+          "text": "Treats creating the repository, changing settings or secrets, and pushing as steps that need the user's approval, separate from the local render."
+        }
+      ],
+      "tags": [
+        "homebrew-tap-setup",
+        "render",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "credentials-and-bottles",
+      "description": "Explain which credentials exist, why update PRs have no bottles, and how bottles get published.",
+      "prompt": "Do I need a personal access token secret in the tap for the weekly updates, and why does an automated update PR not build bottles? How do bottles get published? This is a desk exercise: do not edit anything, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the template files and workflows you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says the tap's update and dispatch workflows use the built-in GITHUB_TOKEN and no update PAT or WORKFLOW_TOKEN secret is read, and that only an external producer dispatching to the tap needs its own token, stored in the producer."
+        },
+        {
+          "text": "Explains a PR opened with GITHUB_TOKEN does not trigger tests.yml, so update PRs have no bottle build until the PR is closed and reopened or pushed to."
+        },
+        {
+          "text": "Describes publishing as applying the pr-pull label, which runs publish.yml (brew pr-pull) after CI built the bottles."
+        },
+        {
+          "text": "Does not recommend a broad repo or admin token."
+        }
+      ],
+      "tags": [
+        "homebrew-tap-setup",
+        "credentials",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "adopt-existing-tap",
+      "description": "Do not run copier update on a tap that has no answers file; adopt carefully.",
+      "prompt": "My existing tap was created from the old GitHub template repository. Can I just run copier update to get the latest template changes? This is a desk exercise: do not edit anything, create a repository, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the template files and workflows you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says copier update needs .copier-answers.yml, which the tap does not have, so it cannot be run as is."
+        },
+        {
+          "text": "Proposes rendering the template to a scratch directory with matching answers, comparing file by file, and bringing over only approved changes while keeping formulae, casks and README prose."
+        },
+        {
+          "text": "Treats the adoption as a separate reviewed change and does not overwrite the tap blindly."
+        }
+      ],
+      "tags": [
+        "homebrew-tap-setup",
+        "adopt",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

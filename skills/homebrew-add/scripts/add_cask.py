@@ -101,7 +101,7 @@ def select_asset(assets: list[dict], wanted: str | None) -> dict:
         names = ", ".join(a["name"] for a in assets)
         sys.exit(f"error: no asset named {wanted!r}; available: {names}")
     for suffix in _ARTIFACT_PREFERENCE:
-        matches = [a for a in assets if a["name"].endswith(suffix)]
+        matches = [a for a in assets if a["name"].lower().endswith(suffix)]
         if len(matches) == 1:
             return matches[0]
         if len(matches) > 1:
@@ -189,7 +189,7 @@ def arch_for(artifact: str) -> str | None:
     lowered = artifact.lower()
     markers = {
         "arm64": ("arm64", "aarch64", "apple-silicon", "applesilicon"),
-        "x86_64": ("x86_64", "x86-64", "amd64", "intel"),
+        "x86_64": ("x86_64", "x86-64", "x64", "amd64", "intel"),
     }
     # Require non-alphanumeric boundaries so a product name that merely contains a
     # marker (``IntelliJ``) is not read as an architecture.
@@ -213,7 +213,7 @@ def stanza_for(stanza_artifact: str, artifact: str, token: str,
     ``--pkg-id``. A ``.dmg``/``.zip`` carries a ``.app`` bundle whose real name we
     can't know without unpacking either, so we guess ``<token>.app`` and flag it.
     """
-    if artifact.endswith(".pkg"):
+    if artifact.lower().endswith(".pkg"):
         if not pkg_id:
             sys.exit(
                 f"error: {artifact} is a .pkg, which needs an uninstall stanza; "
@@ -350,7 +350,12 @@ def main() -> None:
         # space or a `#` (or a tag containing `/`) stays byte-identical to the URL
         # the checksum above was computed from. A version is digits and dots, so it
         # is never encoded and templatize still finds it.
-        url_template = templatize(_rb_str(asset["browser_download_url"]), version)
+        # Template only what follows `/releases/download/` (tag and file name): a
+        # repository name that happens to contain the version must stay literal.
+        download_url = asset["browser_download_url"]
+        head, sep, tail = download_url.partition("/releases/download/")
+        url_template = _rb_str(head) + sep + templatize(_rb_str(tail), version) \
+            if sep else templatize(_rb_str(download_url), version)
 
     stanza, hint = stanza_for(stanza_artifact, artifact, token, args.pkg_id)
     arch = arch_for(artifact)

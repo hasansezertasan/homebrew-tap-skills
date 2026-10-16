@@ -207,6 +207,11 @@ def max_python(requires_python: str | None) -> str | None:
     return f"3.{cap}" if cap is not None else None
 
 
+def excluded_pythons(requires_python: str | None) -> set[int]:
+    """Minor series removed by ``!=3.x.*`` (or ``!=3.x``) clauses."""
+    return {int(m) for m in re.findall(r"!=\s*3\.(\d+)", requires_python or "")}
+
+
 def _series_tuple(series: str) -> tuple[int, ...]:
     """Parse a ``3.x`` series into a comparable integer tuple."""
     return tuple(int(part) for part in series.split("."))
@@ -492,6 +497,17 @@ def main() -> None:
                   f"{DEFAULT_PYTHON_SERIES}; using python@{cap} instead",
                   file=sys.stderr)
             series = cap
+        excluded = excluded_pythons(requires_python)
+        # Step down from the chosen series past any excluded minor, but not below
+        # the package's floor.
+        while int(series.split(".")[1]) in excluded:
+            lower = f"3.{int(series.split('.')[1]) - 1}"
+            if floor and _series_tuple(lower) < _series_tuple(floor):
+                sys.exit(f"error: {name} ({requires_python}) excludes every "
+                         "available Python series; pass --python explicitly.")
+            print(f"warning: {name} excludes python@{series}; using python@{lower}",
+                  file=sys.stderr)
+            series = lower
     python_formula, interpreter = brew_python(series)
 
     requirement = f"{args.package}=={version}"

@@ -114,7 +114,8 @@ rather than escalating privileges speculatively.
 
 Run `mise install` in the rendered tap. Invoke `homebrew-add` to select and
 scaffold the first item; do not hand-write Ruby or invent a demo package.
-`homebrew-add` delegates its gate to `homebrew-verify`. Keep one item per PR.
+`homebrew-add` delegates its gate to `homebrew-verify`. Take PR scope and
+branch conventions from the tap's own instructions.
 
 Bottle publishing follows Homebrew's `brew test-bot` flow, documented in the
 rendered README: CI builds bottles on the PR, then applying the `pr-pull` label

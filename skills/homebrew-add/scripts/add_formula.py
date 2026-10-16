@@ -427,10 +427,15 @@ def run_checks(repo: Path, name: str, tap: str) -> None:
     else:
         print(f"==> {source} is already the active tap's copy; auditing in place")
     ref = f"{tap}/{name}"
+    # `install` is a no-op for an installed formula and `reinstall` fails for one
+    # that is not installed, so pick by whether a keg exists.
+    installed = subprocess.run(["brew", "list", "--formula", ref],
+                               capture_output=True).returncode == 0
+    build = "reinstall" if installed else "install"
     try:
         for cmd in (
             ["brew", "audit", "--strict", "--online", ref],
-            ["brew", "reinstall", "--build-from-source", ref],
+            ["brew", build, "--build-from-source", ref],
             ["brew", "test", ref],
         ):
             print(f"\n==> {' '.join(cmd)}")

@@ -32,7 +32,9 @@ current code, and preserve local work before reproducing an update.
 Separate payload validation, livecheck discovery, the bump, resource
 regeneration, audit, source build and test, PR creation, and unrelated repository
 checks. A Cobo-managed `.gitignore` failure is managed-boilerplate drift, not an
-update incident; use the managed sync procedure instead of editing `.gitignore`.
+update incident; merge the `chore/sync-cobo-boilerplate` pull request the drift
+workflow opens, or use the managed sync procedure, instead of editing
+`.gitignore`.
 
 The weekly formula job processes every changed formula in one loop. A formula
 whose bump, resources, audit, build or test fails is reverted with a warning and

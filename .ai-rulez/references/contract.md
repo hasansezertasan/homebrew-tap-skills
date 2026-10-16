@@ -42,7 +42,7 @@ layout, and offer adoption through `homebrew-tap-setup`.
 | `.github/workflows/update-formula-dispatch.yml`, `update-cask-dispatch.yml` | `repository_dispatch` types `update-formula` and `update-cask`, branches `auto-update/<name>` and `auto-update/cask-<name>` |
 | `.github/workflows/scripts.yml` | README catalog freshness and Cobo boilerplate checks |
 | `.github/workflows/zizmor.yml` | workflow security audit |
-| `.github/workflows/gitignore-drift.yml` | weekly Cobo drift signal |
+| `.github/workflows/gitignore-drift.yml` | weekly job that re-renders the Cobo `.gitignore` and opens a pull request on branch `chore/sync-cobo-boilerplate` when it drifted |
 | `AGENTS.md` | the tap's invariants; skills read it first |
 | `.copier-answers.yml` | recorded template source, version and answers; `copier update` reads it |
 
@@ -53,8 +53,10 @@ layout, and offer adoption through `homebrew-tap-setup`.
   --package-name`; without it the first bump drops extras-only resources.
 - A formula that uses `virtualenv_install_with_resources` gets
   `brew update-python-resources` during updates; other formulae skip it.
-- Update and dispatch jobs use the built-in `GITHUB_TOKEN`; the tap has no
-  update PAT. A producer that dispatches needs its own token (see
+- Update, dispatch and drift jobs open pull requests with
+  `secrets.WORKFLOW_TOKEN || secrets.GITHUB_TOKEN`. The secret is optional and
+  undefined by default, so the built-in `GITHUB_TOKEN` is used and its pull
+  requests start no checks. A producer that dispatches needs its own token (see
   `homebrew-tap-setup`).
 - Dispatch payloads are `{"formula":"name","version":"1.2.3"}` and
   `{"cask":"name","version":"1.2.3"}`; `version` is optional.

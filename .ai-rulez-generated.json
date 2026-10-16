@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:2c57cc925e1b4fcf71011e2ab43da1eab3cc7307b778ed7da11c8f42cddf3e3d",
+  "source_hash": "blake3:d62d66dace3c0a8320af303ef34fbc228dd8e102db898f4dddb2709b308e26be",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -31,7 +31,7 @@
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/add_cask.py": {
-      "content_hash": "blake3:04e8fd5214b20899f625339ae9445fda1ee4556ad9e50bccea1b92cdbf5830fa",
+      "content_hash": "blake3:5b47c10e882db274b85d85e6c7beb96455c79ec04e4e1994267a633397aefbcd",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/add_formula.py": {
@@ -63,7 +63,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {
-      "content_hash": "blake3:40788a1f2b274cffa63536cc77a9a7335ff52cb4d02c87473250d38fe9fc2f9d",
+      "content_hash": "blake3:c7fb18bbc2f1c2b4e2c310f69095688ed19b4f877a7631d56c795b08f2f9ab10",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/agents/openai.yaml": {
@@ -71,7 +71,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/index.md": {
-      "content_hash": "blake3:66c60031c111d90e5fa9613cdae428699dc2b5afdfcb3e2a9c50b280e8d58b8e",
+      "content_hash": "blake3:53bf9b5ef0d87e741c9b77dfc40257bb188ab1bcda06bbd85c2deb1c201db0da",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/contract.md": {

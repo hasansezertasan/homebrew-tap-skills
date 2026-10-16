@@ -102,6 +102,15 @@ def select_asset(assets: list[dict], wanted: str | None) -> dict:
              + ", ".join(a["name"] for a in assets))
 
 
+def checksum_url(asset: dict) -> str:
+    """Prefer the asset API URL so a token reaches private repositories.
+
+    The API answers with a redirect to the file, and the redirect handler strips
+    the token before following it. Public assets work either way.
+    """
+    return asset.get("url") or asset["browser_download_url"]
+
+
 def sha256_of(url: str) -> str:
     """Download a release asset and return its sha256, streaming to bounded memory."""
     print(f"==> Downloading {url} to compute sha256", file=sys.stderr)
@@ -332,7 +341,7 @@ def main() -> None:
         version = version_from_tag(tag)
         asset = select_asset(release.get("assets", []), args.artifact)
         artifact = asset["name"]
-        sha = sha256_of(asset["browser_download_url"])
+        sha = sha256_of(checksum_url(asset))
         # Rebuild the URL from the tag + filename, templated on the version so
         # `brew bump-cask-pr` (and livecheck) can bump it in place. Reuse the same
         # templated filename in the pkg stanza so it tracks the URL across bumps.

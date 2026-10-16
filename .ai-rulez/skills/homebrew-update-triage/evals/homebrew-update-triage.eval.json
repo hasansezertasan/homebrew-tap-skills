@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "green-run-missing-formula",
+      "description": "Explain a weekly run that succeeded but did not update a formula, using the per-formula revert and hidden livecheck errors.",
+      "prompt": "The weekly update-formulas run is green and opened a PR, but one formula that has a new upstream release is not in it. How do I triage it? This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says the weekly job reverts a formula whose bump, resources, audit, build or test fails and continues, so the log's per-formula warning (not the job status) shows it, and the PR can open without that formula."
+        },
+        {
+          "text": "Says to run brew livecheck --json locally because the workflow hides livecheck errors and reads failure as up to date, and notes a deprecate! or disable! formula is skipped on purpose."
+        },
+        {
+          "text": "Delegates the repair to homebrew-fix-formula and finishes with homebrew-verify."
+        }
+      ],
+      "tags": [
+        "homebrew-update-triage",
+        "weekly",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "dispatch-payload-rejected",
+      "description": "Treat a rejected dispatch payload as data and fix it at the producer.",
+      "prompt": "A producer's repository_dispatch to this tap failed with an invalid formula token error. The payload was {\"formula\":\"My Widget\",\"version\":\"1.2.3\"}. What is wrong and how do I fix it? This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Identifies that the formula token must match the anchored pattern in the dispatch workflow's Validate payload step and 'My Widget' does not, so the producer must send the lowercase token."
+        },
+        {
+          "text": "Says not to relax validation to accept spaces or shell syntax and never to interpolate payload text into shell source."
+        },
+        {
+          "text": "Notes a valid token for a file that does not exist fails with not found, and that the version is optional."
+        }
+      ],
+      "tags": [
+        "homebrew-update-triage",
+        "dispatch",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "update-pr-without-bottles",
+      "description": "Explain why an automated update PR has no bottle build and how to get one.",
+      "prompt": "The automated update PR for a formula shows no tests.yml run and no bottles, so I cannot apply pr-pull. Is the workflow broken? This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says this is expected: a PR opened with GITHUB_TOKEN does not trigger tests.yml, so the bump job audits, builds from source and tests inside its own run instead."
+        },
+        {
+          "text": "Says to close and reopen the PR or push to its branch to run tests.yml, then apply pr-pull after bottles are built."
+        },
+        {
+          "text": "Does not recommend widening token permissions as the fix."
+        }
+      ],
+      "tags": [
+        "homebrew-update-triage",
+        "bottles",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

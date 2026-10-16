@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "resource-drift-with-extras",
+      "description": "Repair resources with brew update-python-resources while preserving the extras marker, then rebuild and verify.",
+      "prompt": "The weekly update bumped my formula 'widget' to a new version but a resource now fails to build. The formula was scaffolded with --extras tui. How do I repair it? This is a regression-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely and direct the reproducing and checking rather than doing it.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Regenerates resources with brew update-python-resources rather than hand-editing resource blocks, passing --package-name widget[tui] from the homebrew-tap:extras comment."
+        },
+        {
+          "text": "Keeps the extras comment and the livecheck block intact."
+        },
+        {
+          "text": "Rebuilds from source and runs brew test, not just brew audit, and finishes with homebrew-verify and README regeneration."
+        },
+        {
+          "text": "Notes the weekly workflow reverts a failing formula and warns, so the log's per-formula warning, not the job status, shows the failure."
+        }
+      ],
+      "tags": [
+        "homebrew-fix-formula",
+        "resources",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "cask-url-and-pkg",
+      "description": "Repair a cask whose URL or pkg stanza is wrong using the real asset bytes.",
+      "prompt": "A cask in this tap fails brew audit --cask --strict after a bump, and the asset for the new release is a .pkg. How do I fix it? This is a regression-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely and direct the reproducing and checking rather than doing it.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Downloads the real asset and computes the checksum from those bytes instead of copying one from an error message."
+        },
+        {
+          "text": "Requires an uninstall pkgutil stanza with the package identifier read from the asset, and keeps the URL version-templated."
+        },
+        {
+          "text": "Runs brew audit --cask --strict --online by name and hands off to homebrew-verify."
+        }
+      ],
+      "tags": [
+        "homebrew-fix-formula",
+        "cask",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "seeded-cask-activation",
+      "description": "Do not fabricate a digest or call a seeded cask installable.",
+      "prompt": "A seeded cask has version 0.0.0 and a zero sha256. Upstream just made its first release. How do I activate it? This is a regression-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely and direct the reproducing and checking rather than doing it.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Verifies the real release asset, its checksum and the app or pkg stanzas before activating, and lets brew bump-cask-pr fill the version and checksum."
+        },
+        {
+          "text": "If no real asset exists, leaves the placeholder, reports activation blocked, and never fabricates a digest."
+        },
+        {
+          "text": "Does not claim the cask installs until audit and install evidence exist."
+        }
+      ],
+      "tags": [
+        "homebrew-fix-formula",
+        "seed",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

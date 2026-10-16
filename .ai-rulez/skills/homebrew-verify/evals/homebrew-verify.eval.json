@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "formula-evidence-and-pending-build",
+      "description": "Run the local gate and Homebrew checks, tie CI evidence to the head SHA, and mark the build pending when it is unavailable.",
+      "prompt": "I added a new formula to this tap and the unit tests pass locally. The PR is a draft. Is it ready for review? This is a workflow-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Give a concrete verification report.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says passing unit tests are not enough: runs README regeneration and mise run check and brew audit --strict --online, plus brew install --build-from-source and brew test for a new formula."
+        },
+        {
+          "text": "Notes tests.yml build-bottle and cask-audit do not run on a draft PR, so there is no CI build evidence for the head SHA, and marks it pending."
+        },
+        {
+          "text": "Checks the generated description, SPDX license, livecheck and test command, and the homebrew-tap:extras comment if extras were used."
+        },
+        {
+          "text": "Reports passed, pending and skipped separately and does not claim buildability is verified."
+        }
+      ],
+      "tags": [
+        "homebrew-verify",
+        "formula",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "seeded-cask-not-verified",
+      "description": "A seeded placeholder cask is not installable and must not be reported as verified.",
+      "prompt": "I added a cask with --seed because the project has no release yet. cask-audit is green on the PR. Can I call it verified? This is a workflow-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Give a concrete verification report.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says the seeded cask (version 0.0.0, zero checksum) is not installable, records installation as intentionally skipped, and does not call it verified."
+        },
+        {
+          "text": "Requires verification again once a real release activates it through brew bump-cask-pr."
+        },
+        {
+          "text": "Does not treat a green cask-audit as install evidence."
+        }
+      ],
+      "tags": [
+        "homebrew-verify",
+        "seed",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "removal-needs-only-local-gate",
+      "description": "Removal-only changes need the local gate and no build evidence.",
+      "prompt": "My PR only deletes Formula/old.rb and regenerates the README table. What verification do I need? This is a workflow-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Give a concrete verification report.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Says a removal-only change normally needs the local gate (README regeneration and mise run check) rather than a new build or install, and records installation as not exercised."
+        },
+        {
+          "text": "Checks that the regenerated README shows only the approved row removed and that no surviving item references the removed formula."
+        }
+      ],
+      "tags": [
+        "homebrew-verify",
+        "removal",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

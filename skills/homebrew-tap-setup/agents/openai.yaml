@@ -1,0 +1,5 @@
+---
+interface:
+  display_name: "Set Up a Homebrew Tap"
+  short_description: "Render copier-homebrew-tap and configure the new tap"
+  default_prompt: "Use $homebrew-tap-setup to set up a tap and verify its first formula or cask."

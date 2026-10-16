@@ -1,0 +1,32 @@
+{
+  "name": "homebrew-tap-skills",
+  "version": "0.1.0",
+  "description": "Skills for operating a Homebrew tap: set it up, then add, fix, triage, remove, and verify formulae and casks.",
+  "author": {
+    "name": "Hasan Sezer Tasan",
+    "url": "https://github.com/hasansezertasan"
+  },
+  "repository": "https://github.com/hasansezertasan/homebrew-tap-skills",
+  "keywords": [
+    "homebrew",
+    "tap",
+    "formula",
+    "cask",
+    "macos"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Homebrew Tap Skills",
+    "shortDescription": "Operate a Homebrew tap's formulae and casks",
+    "longDescription": "Skills for operating a Homebrew tap: set it up, then add, fix, triage, remove, and verify formulae and casks.",
+    "developerName": "Hasan Sezer Tasan",
+    "category": "Development",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Verify this Homebrew tap change before I open a PR."
+    ]
+  }
+}

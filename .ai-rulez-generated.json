@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:a7d36f743f70dbdab0fe45e534a4f07f9852baaad9f094084ed693a7615a5310",
+  "source_hash": "blake3:063d7e8f2345012c6bfa57bc8a819e013889697c3c49eb21f523b63876c59d4b",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -28,14 +28,6 @@
     },
     "skills/homebrew-add/references/contract.md": {
       "content_hash": "blake3:801f219732b75e378c591f26fba6a7e7912d6b0df391202fbd1eb2d61b2db248",
-      "mode": "0644"
-    },
-    "skills/homebrew-add/scripts/__pycache__/add_formula.cpython-315.pyc": {
-      "content_hash": "blake3:2a233b2880f85177e87f4877bc75d18901ed87bf8acc64f3550fe2815111956f",
-      "mode": "0644"
-    },
-    "skills/homebrew-add/scripts/__pycache__/tap_name.cpython-315.pyc": {
-      "content_hash": "blake3:5a5e3fa5c9aec7b87fb1f9888bc98123ce52561a9105a65b1ac1f7c9148c68ba",
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/add_cask.py": {

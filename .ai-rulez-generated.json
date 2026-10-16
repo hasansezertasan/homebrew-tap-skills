@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:063d7e8f2345012c6bfa57bc8a819e013889697c3c49eb21f523b63876c59d4b",
+  "source_hash": "blake3:ea386faa01ec5094453d4dac39beeed2bacc6920217f676c91e8ba234d2b5d7d",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -35,7 +35,7 @@
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/add_formula.py": {
-      "content_hash": "blake3:3e14864fec409ace64f68ffb3a0543f2ee62a19856cbbeaa81d9985cf6d1422a",
+      "content_hash": "blake3:51f96f4fd887c9dc043fe3c8226c8fb794364e2f7fd05ddd40cd4e640308f26c",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/tap_name.py": {

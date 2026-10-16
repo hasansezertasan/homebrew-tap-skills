@@ -86,6 +86,17 @@ class PythonSeriesTest(unittest.TestCase):
     def test_min_python_with_upper_bound(self) -> None:
         self.assertEqual(af.min_python(">=3.10,<3.14"), "3.10")
 
+    def test_strict_floor_keeps_its_series(self) -> None:
+        self.assertEqual(af.min_python(">3.14,<3.15"), "3.14")
+
+    def test_patch_precise_clauses_are_flagged(self) -> None:
+        self.assertTrue(af.patch_precise_clauses(">=3.14,<=3.14.0"))
+        self.assertEqual(af.patch_precise_clauses(">=3.10,!=3.14.*,<3.15"), [])
+
+    def test_only_wildcard_exclusions_drop_a_series(self) -> None:
+        self.assertEqual(af.excluded_pythons(">=3.14,!=3.14.*"), {14})
+        self.assertEqual(af.excluded_pythons(">=3.14,!=3.14"), set())
+
     def test_min_python_none(self) -> None:
         self.assertIsNone(af.min_python(None))
 

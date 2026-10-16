@@ -171,13 +171,14 @@ def min_python(requires_python: str | None) -> str | None:
     which pin a floor just as firmly. This is a pragmatic scan, not a PEP 440
     solver — these scripts are stdlib-only, so ``packaging`` is not available.
     ``!=`` exclusions are deliberately ignored: they carve holes out of a range
-    rather than setting a floor.
+    rather than setting a floor. Patch-level precision is out of scope too; see
+    :func:`patch_precise_clauses`, which flags specs this scan cannot settle.
     """
     if not requires_python:
         return None
-    # A strict `>3.14` excludes 3.14 itself, so the floor is the next series.
-    matches = [int(minor) + (op == ">")
-               for op, minor in re.findall(r"(>=?|==|~=)\s*3\.(\d+)", requires_python)]
+    # `>3.14` still admits 3.14.1, so a strict floor keeps its own series.
+    matches = [int(minor)
+               for _, minor in re.findall(r"(>=?|==|~=)\s*3\.(\d+)", requires_python)]
     if not matches:
         return None
     # Comma-separated clauses are ANDed, so the strongest lower bound wins.
@@ -210,10 +211,18 @@ def max_python(requires_python: str | None) -> str | None:
     return f"3.{cap}" if cap is not None else None
 
 
+def patch_precise_clauses(requires_python: str | None) -> list[str]:
+    """Clauses that name a patch release (``<=3.14.0``, ``>3.14.2``, ``!=3.14.1``).
+
+    The series-level scan below cannot decide these, so the caller warns and points
+    at ``--python`` instead of guessing. Wildcards (``==3.12.*``) are series-level.
+    """
+    return re.findall(r"[<>=!~]=?\s*3\.\d+\.\d+(?![\d.*])", requires_python or "")
+
+
 def excluded_pythons(requires_python: str | None) -> set[int]:
-    """Minor series removed whole by ``!=3.x.*`` (or ``!=3.x``); ``!=3.x.y`` is ignored."""
-    return {int(m) for m in re.findall(
-        r"!=\s*3\.(\d+)(?:\.\*)?(?![\d.])", requires_python or "")}
+    """Minor series removed whole by a wildcard ``!=3.x.*``; other ``!=`` are ignored."""
+    return {int(m) for m in re.findall(r"!=\s*3\.(\d+)\.\*", requires_python or "")}
 
 
 def _series_tuple(series: str) -> tuple[int, ...]:
@@ -495,6 +504,11 @@ def main() -> None:
         requires_python = info.get("requires_python")
         series = DEFAULT_PYTHON_SERIES
         floor = min_python(requires_python)
+        if clauses := patch_precise_clauses(requires_python):
+            print(f"warning: {name} ({requires_python}) has patch-level clauses "
+                  f"({', '.join(clauses)}) that this series-level scan cannot "
+                  "settle; if resolution fails, pass --python python@3.X",
+                  file=sys.stderr)
         cap = max_python(requires_python)
         if floor and _series_tuple(floor) > _series_tuple(DEFAULT_PYTHON_SERIES):
             print(f"warning: {name} requires Python >= {floor}; using python@"

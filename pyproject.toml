@@ -1,0 +1,8 @@
+# Version carrier only: release-please bumps it and ai-rulez reads it
+# (`[plugin] version_from`). This repository is not a Python package.
+[project]
+name = "homebrew-tap-skills"
+version = "0.1.0"
+description = "Skills for operating a Homebrew tap: set it up, then add, fix, triage, remove, and verify formulae and casks."
+requires-python = ">=3.12"
+license = "MIT"

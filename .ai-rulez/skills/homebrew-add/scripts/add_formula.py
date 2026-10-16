@@ -194,8 +194,10 @@ def max_python(requires_python: str | None) -> str | None:
     if not requires_python:
         return None
     cap: int | None = None
-    for op, minor in re.findall(r"(<=?)\s*3\.(\d+)", requires_python):
-        allowed = int(minor) if op == "<=" else int(minor) - 1
+    for op, minor, patch in re.findall(r"(<=?)\s*3\.(\d+)(?:\.(\d+))?", requires_python):
+        # `<3.14.99` still admits 3.14; only a bare `<3.14` (or `<3.14.0`) excludes it.
+        admits_minor = op == "<=" or (patch not in ("", "0") and patch != "*")
+        allowed = int(minor) if admits_minor else int(minor) - 1
         cap = allowed if cap is None else min(cap, allowed)
     # An exact pin caps as hard as a `<` clause: `==3.12` and `==3.12.*` both
     # exclude 3.13. So does a compatible release pinned past the minor
@@ -507,14 +509,19 @@ def main() -> None:
         excluded = excluded_pythons(requires_python)
         # Step down from the chosen series past any excluded minor, but not below
         # the package's floor.
-        while int(series.split(".")[1]) in excluded:
-            lower = f"3.{int(series.split('.')[1]) - 1}"
-            if floor and _series_tuple(lower) < _series_tuple(floor):
+        if int(series.split(".")[1]) in excluded:
+            start = int(series.split(".")[1])
+            low = int(floor.split(".")[1]) if floor else start
+            high = int(cap.split(".")[1]) if cap else start + 5
+            # Prefer older series down to the floor, then search upward to any cap.
+            candidates = [*range(start - 1, low - 1, -1), *range(start + 1, high + 1)]
+            usable = next((m for m in candidates if m not in excluded), None)
+            if usable is None:
                 sys.exit(f"error: {name} ({requires_python}) excludes every "
                          "available Python series; pass --python explicitly.")
-            print(f"warning: {name} excludes python@{series}; using python@{lower}",
+            print(f"warning: {name} excludes python@{series}; using python@3.{usable}",
                   file=sys.stderr)
-            series = lower
+            series = f"3.{usable}"
     python_formula, interpreter = brew_python(series)
 
     requirement = f"{args.package}=={version}"

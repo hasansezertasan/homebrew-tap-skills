@@ -260,12 +260,14 @@ def render(token: str, repo: str, version: str, sha: str,
         "    strategy :github_latest",
         "  end",
         "",
+        # `depends_on` stanzas are alphabetized by type (arch before macos).
+        *arch_lines,
         "  # This app is macOS-only. If `brew audit --online` reports the cask's",
         "  # macOS floor is higher than the bundle's LSMinimumSystemVersion, pin it",
         "  # explicitly to match, e.g. `depends_on macos: :big_sur`.",
         "  depends_on :macos",
         "",
-    ], *arch_lines, *[
+    ], *[
         stanza,
         "end",
         "",

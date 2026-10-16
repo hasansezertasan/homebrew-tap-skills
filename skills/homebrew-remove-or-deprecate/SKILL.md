@@ -1,5 +1,5 @@
 ---
-description: Remove, deprecate or disable a formula or cask in this Homebrew tap when retiring an upstream tool, dropping a packaging route, or replacing a package. Establish deprecate!/disable! versus deletion, identify the exact items and any same-named formula and cask pair, preserve dependents, handle renames with tap_migrations.json, regenerate the README catalog, and finish with homebrew-verify.
+description: Remove, deprecate or disable a formula or cask in this Homebrew tap when retiring an upstream tool, dropping a packaging route, or replacing a package. Establish deprecate!/disable! versus deletion, identify the exact items and any same-named formula and cask pair, preserve dependents, handle renames with formula_renames.json or cask_renames.json and cross-tap moves with tap_migrations.json, regenerate the README catalog, and finish with homebrew-verify.
 name: homebrew-remove-or-deprecate
 ---
 
@@ -28,8 +28,9 @@ clear outcome, ask through the native question tool before acting:
   deprecation period, or when installing is actively harmful.
 - **Removal:** delete the file. Existing installs are not uninstalled, users get
   an error on update or reinstall, and history remains in Git.
-- **Rename or move:** a tap-level `tap_migrations.json` entry redirects the old
-  name to the new name or tap; deleting the old file alone does not migrate users.
+- **Rename within the tap:** a `formula_renames.json` or `cask_renames.json`
+  entry maps the old name to the new one. **Move to another tap:**
+  `tap_migrations.json`. Deleting the old file alone migrates no one.
 
 Explain that none of these uninstall or migrate an installed package by
 themselves. Verify the user's Homebrew revision and any claim about `brew`
@@ -66,8 +67,11 @@ guidance that promises migration the change does not perform.
 - **Remove:** delete the exact file and nothing else. Do not touch an unrelated
   package, shared dependency or the directory scaffolding (`Formula/README.md`,
   `Casks/README.md`).
-- **Rename or move:** add the `tap_migrations.json` entry as agreed and confirm
-  the replacement exists before pointing at it.
+- **Rename or move:** add the `formula_renames.json` or `cask_renames.json`
+  entry (rename) or the `tap_migrations.json` entry (move to another tap) as
+  agreed, and confirm the replacement exists before pointing at it. Never list a
+  name that still has a file in `tap_migrations.json`; `brew audit` rejects a cask
+  that does.
 
 Account for automation. The weekly formula job skips any formula whose file
 contains a `deprecate!` or `disable!` line, so an edit keeps it out of weekly

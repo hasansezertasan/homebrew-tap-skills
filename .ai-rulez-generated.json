@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:ea386faa01ec5094453d4dac39beeed2bacc6920217f676c91e8ba234d2b5d7d",
+  "source_hash": "blake3:d62d66dace3c0a8320af303ef34fbc228dd8e102db898f4dddb2709b308e26be",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -31,15 +31,19 @@
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/add_cask.py": {
-      "content_hash": "blake3:f40481a71a406ba3b1d20b59da4a1533825eca4f225b4c0d0378d63a3858ddd8",
+      "content_hash": "blake3:5b47c10e882db274b85d85e6c7beb96455c79ec04e4e1994267a633397aefbcd",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/add_formula.py": {
-      "content_hash": "blake3:51f96f4fd887c9dc043fe3c8226c8fb794364e2f7fd05ddd40cd4e640308f26c",
+      "content_hash": "blake3:db2727964011eb8e4411ac2eb6288486cd2931c2c86b1cb608b1068905d3c45f",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/tap_name.py": {
       "content_hash": "blake3:512e325ed0072affefb35b0f56e7dff23e246ea8cd0dc69212d4420312ac3339",
+      "mode": "0644"
+    },
+    "skills/homebrew-add/scripts/url_fetch.py": {
+      "content_hash": "blake3:a9caa747286660fc0566ccd36439050104ed75a01c2e6af8e6714e134b9197a5",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/SKILL.md": {
@@ -59,7 +63,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {
-      "content_hash": "blake3:1fc6ef6ca0d7b785d84f18322591515ca86c539ba98c280f5a5dbe85bcd52a3b",
+      "content_hash": "blake3:c7fb18bbc2f1c2b4e2c310f69095688ed19b4f877a7631d56c795b08f2f9ab10",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/agents/openai.yaml": {
@@ -67,7 +71,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/index.md": {
-      "content_hash": "blake3:66c60031c111d90e5fa9613cdae428699dc2b5afdfcb3e2a9c50b280e8d58b8e",
+      "content_hash": "blake3:53bf9b5ef0d87e741c9b77dfc40257bb188ab1bcda06bbd85c2deb1c201db0da",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/contract.md": {
@@ -75,7 +79,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/lifecycle-cases.md": {
-      "content_hash": "blake3:c4186a19bf52346d47919c86f58bf5be1fdb20beb71777270540da73584f508a",
+      "content_hash": "blake3:c7d48400fa6c6122493be8fcc19706c64c9efd962c4a7c4ea12d4bf3b0bb4b1c",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/SKILL.md": {
@@ -95,7 +99,7 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/setup-cases.md": {
-      "content_hash": "blake3:a7d51308f379a660e025a0deee1d984e35d94fa6aa11f5f8fefd6d8af6b6878a",
+      "content_hash": "blake3:6965d7fe9481bd1f2be660692c080999950e6a0a712a98ab3404e28d64048c06",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/setup-report.md": {

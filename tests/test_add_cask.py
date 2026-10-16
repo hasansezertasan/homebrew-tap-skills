@@ -192,5 +192,16 @@ class EncodedUrlTest(unittest.TestCase):
         )
 
 
+class ChecksumUrlTest(unittest.TestCase):
+    def test_prefers_the_api_asset_url(self) -> None:
+        asset = {"url": "https://api.github.com/repos/a/b/releases/assets/1",
+                 "browser_download_url": "https://github.com/a/b/releases/download/v1/x.zip"}
+        self.assertEqual(ac.checksum_url(asset), asset["url"])
+
+    def test_falls_back_to_the_download_url(self) -> None:
+        asset = {"browser_download_url": "https://github.com/a/b/releases/download/v1/x.zip"}
+        self.assertEqual(ac.checksum_url(asset), asset["browser_download_url"])
+
+
 if __name__ == "__main__":
     unittest.main()

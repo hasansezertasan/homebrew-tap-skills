@@ -39,7 +39,7 @@ Pull requests write, `publish.yml` needs Contents write, the dispatch cask failu
 report needs Issues write, and the lints need Pull requests write. Do not
 generalize one job's permissions to every workflow.
 
-## Cases
+## Short cases
 
 | Case | Handling |
 | --- | --- |
@@ -49,6 +49,50 @@ generalize one job's permissions to every workflow.
 | Existing tap with no `.copier-answers.yml` | It predates the Copier template; follow "Adopting the template in an existing tap" and do not run `copier update`. |
 | Default branch is not `main` | Workflow filters and `publish.yml` target `main`; report it and agree an adaptation separately. |
 | Empty tap passes `mise run check` | The gate runs with no formula or cask, so it proves the template renders, not that a package builds or installs. |
+
+## Worked desk scenarios
+
+Synthetic situations to evaluate decisions, not claims about published taps or
+recorded `brew` runs.
+
+### A. Unspecified destination and first package
+
+Ask for owner and repository (with the `homebrew-` prefix), visibility, default
+branch, the first upstream and route (PyPI formula or macOS cask), and whether
+the goal is a plan or a published, verified tap. Render with `copier copy` and
+explicit `-d name=value` answers. Distinguish rendered files from Actions
+settings, secrets and branch policy, which the template does not configure. Keep
+identity neutral and continue with `homebrew-add` then `homebrew-verify`; do not
+invent a formula.
+
+### B. Correct origin, stale `HOMEBREW_TAP` override
+
+Tap identity resolves from `HOMEBREW_TAP`, then the `origin` remote
+(`tap_name.py`, `resolve`), so a stale override silently wins over a correct
+remote. A remote without the `homebrew-` prefix yields `owner/repo` unchanged, a
+name `brew tap` cannot resolve. Check the environment and the remote separately
+before trusting generated names. A successful scaffold does not prove the tap is
+installable: that needs the files pushed and a `brew tap` plus install from the
+remote, which a local run does not show.
+
+### C. Wrong secret and an empty-tap check
+
+Explain that no tap workflow reads `WORKFLOW_TOKEN` or `HOMEBREW_TAP_TOKEN`;
+updates use `GITHUB_TOKEN`, and only a producer dispatching to the tap needs its
+own token, stored in the producer. Cover the PR-creation setting and why a PR
+opened with `GITHUB_TOKEN` starts no `tests.yml` run. An empty tap passing
+`mise run check` proves the template renders, not that publishing, bottle
+building or a cask install works. Never expose secrets or recommend blanket
+privileges to hide missing evidence.
+
+### D. Edited template-managed file, then `copier update`
+
+A tap owner hand-edited a workflow the template manages and later wants
+template fixes. Read `.copier-answers.yml` for the recorded source and version,
+run `copier update` (with approval for the working tree) and resolve conflicts
+deliberately. Do not delete the answers file or re-run `copier copy` over the
+checkout. Resolve a managed-boilerplate drift failure through the managed sync,
+not by hand-editing `.gitignore`.
 
 ## External documentation checked
 

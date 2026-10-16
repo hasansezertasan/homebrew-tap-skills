@@ -31,15 +31,15 @@ codex plugin marketplace add /absolute/path/to/homebrew-tap-skills
 codex plugin add homebrew-tap-skills@homebrew-tap-skills
 ```
 
-These install flows follow the plugin manifests, but a successful installation
-has not yet been recorded for Claude Code or Codex, so treat them as unverified
-packaging guidance. Other agents can read `skills/<name>/SKILL.md`. See
+Both install flows were run once on macOS (see [host support](docs/host-support.md)
+for versions and scope); that is an install and one desk prompt, not a
+task-success result. Other agents can read `skills/<name>/SKILL.md`. See
 [host support](docs/host-support.md) for the evidence recorded per host. The
 skills assume the layout in the
 [template contract](.ai-rulez/references/contract.md).
 
-The formula and cask scaffolders ship inside `homebrew-add`
-(`skills/homebrew-add/scripts/`); the tap itself no longer carries them.
+The formula and cask scaffolders are part of `homebrew-add`
+(`skills/homebrew-add/scripts/`); a tap does not need to carry its own.
 
 ## Development
 

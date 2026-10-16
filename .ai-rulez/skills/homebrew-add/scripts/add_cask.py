@@ -16,13 +16,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
-import os
 import re
 import sys
 import urllib.error
-import urllib.request
 
+import url_fetch
 from tap_name import resolve as resolve_tap
 from tap_name import tap_root
 
@@ -38,21 +36,9 @@ _PLACEHOLDER_SHA = "0" * 64
 _PLACEHOLDER_VERSION = "0.0.0"
 
 
-def _request(url: str, *, accept: str = "application/vnd.github+json") -> urllib.request.Request:
-    """Build a GitHub API request, authenticating from the environment if possible."""
-    req = urllib.request.Request(url)
-    req.add_header("Accept", accept)
-    req.add_header("User-Agent", "homebrew-tap-add-cask")
-    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-    if token:
-        req.add_header("Authorization", f"Bearer {token}")
-    return req
-
-
 def fetch_json(url: str) -> dict:
     """Fetch and decode a JSON document from the GitHub API, failing loudly."""
-    with urllib.request.urlopen(_request(url)) as response:  # noqa: S310 - trusted host
-        return json.load(response)
+    return url_fetch.get_json(url, accept="application/vnd.github+json")
 
 
 def normalize(name: str) -> str:
@@ -116,11 +102,20 @@ def select_asset(assets: list[dict], wanted: str | None) -> dict:
              + ", ".join(a["name"] for a in assets))
 
 
+def checksum_url(asset: dict) -> str:
+    """Prefer the asset API URL so a token reaches private repositories.
+
+    The API answers with a redirect to the file, and the redirect handler strips
+    the token before following it. Public assets work either way.
+    """
+    return asset.get("url") or asset["browser_download_url"]
+
+
 def sha256_of(url: str) -> str:
     """Download a release asset and return its sha256, streaming to bounded memory."""
     print(f"==> Downloading {url} to compute sha256", file=sys.stderr)
     digest = hashlib.sha256()
-    with urllib.request.urlopen(_request(url, accept="application/octet-stream")) as response:  # noqa: S310
+    with url_fetch.open_url(url, accept="application/octet-stream") as response:
         for chunk in iter(lambda: response.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
@@ -346,7 +341,7 @@ def main() -> None:
         version = version_from_tag(tag)
         asset = select_asset(release.get("assets", []), args.artifact)
         artifact = asset["name"]
-        sha = sha256_of(asset["browser_download_url"])
+        sha = sha256_of(checksum_url(asset))
         # Rebuild the URL from the tag + filename, templated on the version so
         # `brew bump-cask-pr` (and livecheck) can bump it in place. Reuse the same
         # templated filename in the pkg stanza so it tracks the URL across bumps.

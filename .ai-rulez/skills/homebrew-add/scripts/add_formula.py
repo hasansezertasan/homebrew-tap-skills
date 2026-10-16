@@ -180,7 +180,8 @@ def min_python(requires_python: str | None) -> str | None:
                for op, minor in re.findall(r"(>=?|==|~=)\s*3\.(\d+)", requires_python)]
     if not matches:
         return None
-    return f"3.{min(matches)}"
+    # Comma-separated clauses are ANDed, so the strongest lower bound wins.
+    return f"3.{max(matches)}"
 
 
 def max_python(requires_python: str | None) -> str | None:
@@ -429,7 +430,7 @@ def run_checks(repo: Path, name: str, tap: str) -> None:
     try:
         for cmd in (
             ["brew", "audit", "--strict", "--online", ref],
-            ["brew", "install", "--build-from-source", ref],
+            ["brew", "reinstall", "--build-from-source", ref],
             ["brew", "test", ref],
         ):
             print(f"\n==> {' '.join(cmd)}")

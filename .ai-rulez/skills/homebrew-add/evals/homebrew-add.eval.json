@@ -17,7 +17,7 @@
           "text": "Runs the README catalog regeneration (mise run generate-readme) and hands off to homebrew-verify before a PR."
         },
         {
-          "text": "Keeps one item per pull request and does not push to main."
+          "text": "Follows the target tap's own contribution rules for PR scope and branches, and does not push to main without approval."
         }
       ],
       "tags": [

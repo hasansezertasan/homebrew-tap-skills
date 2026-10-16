@@ -208,8 +208,9 @@ def max_python(requires_python: str | None) -> str | None:
 
 
 def excluded_pythons(requires_python: str | None) -> set[int]:
-    """Minor series removed by ``!=3.x.*`` (or ``!=3.x``) clauses."""
-    return {int(m) for m in re.findall(r"!=\s*3\.(\d+)", requires_python or "")}
+    """Minor series removed whole by ``!=3.x.*`` (or ``!=3.x``); ``!=3.x.y`` is ignored."""
+    return {int(m) for m in re.findall(
+        r"!=\s*3\.(\d+)(?:\.\*)?(?![\d.])", requires_python or "")}
 
 
 def _series_tuple(series: str) -> tuple[int, ...]:

@@ -137,7 +137,10 @@ def version_from_tag(tag: str) -> str:
     bump rewrote the tag in the URL while still requesting the previous filename —
     a 404. A tag with no digits has no version to extract and is returned as-is.
     """
-    match = re.search(r"\d[\w.+-]*$", tag)
+    # Prefer a dotted version so a digit in the decoration (`app2-v1.2.3`) is not
+    # taken as its start; fall back to any trailing number (`v12`).
+    match = (re.search(r"\d+(?:\.\d+)+[\w.+-]*$", tag)
+             or re.search(r"\d[\w.+-]*$", tag))
     return match.group(0) if match else tag
 
 
@@ -316,6 +319,9 @@ def main() -> None:
         # No release to introspect: assume this tap's common conventions (a `v<version>`
         # tag and a static artifact name) and template a URL the first bump can correct.
         artifact = args.artifact or f"{token}.dmg"
+        if not artifact.lower().endswith(_ARTIFACT_PREFERENCE):
+            sys.exit(f"error: {artifact!r} is not a supported cask asset "
+                     f"({', '.join(_ARTIFACT_PREFERENCE)})")
         version, sha = _PLACEHOLDER_VERSION, _PLACEHOLDER_SHA
         stanza_artifact = _rb_str(artifact)
         url_template = (f"https://github.com/{_rb_str(owner)}/{_rb_str(repo)}"

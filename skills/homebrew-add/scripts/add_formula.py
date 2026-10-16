@@ -175,10 +175,12 @@ def min_python(requires_python: str | None) -> str | None:
     """
     if not requires_python:
         return None
-    matches = re.findall(r"(?:>=?|==|~=)\s*3\.(\d+)", requires_python)
+    # A strict `>3.14` excludes 3.14 itself, so the floor is the next series.
+    matches = [int(minor) + (op == ">")
+               for op, minor in re.findall(r"(>=?|==|~=)\s*3\.(\d+)", requires_python)]
     if not matches:
         return None
-    return f"3.{min(int(m) for m in matches)}"
+    return f"3.{min(matches)}"
 
 
 def max_python(requires_python: str | None) -> str | None:
@@ -268,7 +270,7 @@ def _is_pure_python_wheel(filename: str) -> bool:
         return False
     python_tag, abi_tag, platform_tag = parts[-3:]
     return (platform_tag == "any" and abi_tag == "none"
-            and all(tag.startswith("py") for tag in python_tag.split(".")))
+            and "py3" in python_tag.split("."))
 
 
 def sdist_for(name: str, version: str) -> tuple[str, str, bool]:
@@ -411,6 +413,8 @@ def run_checks(repo: Path, name: str, tap: str) -> None:
     # already editing the file brew reads: staging it would be shutil.copy onto
     # itself (SameFileError), and the cleanup below would delete their work.
     staged = source.resolve() != tap_formula.resolve()
+    # Keep a pre-existing formula in the active tap so cleanup can restore it.
+    previous = tap_formula.read_bytes() if staged and tap_formula.exists() else None
     if staged:
         shutil.copy(source, tap_formula)
     else:
@@ -425,7 +429,9 @@ def run_checks(repo: Path, name: str, tap: str) -> None:
             print(f"\n==> {' '.join(cmd)}")
             subprocess.run(cmd, check=True)
     finally:
-        if staged:
+        if previous is not None:
+            tap_formula.write_bytes(previous)
+        elif staged:
             tap_formula.unlink(missing_ok=True)
 
 

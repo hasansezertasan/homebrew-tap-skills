@@ -94,6 +94,9 @@ def select_asset(assets: list[dict], wanted: str | None) -> dict:
     if wanted:
         for asset in assets:
             if asset["name"] == wanted:
+                if not asset["name"].lower().endswith(_ARTIFACT_PREFERENCE):
+                    sys.exit(f"error: {wanted!r} is not a supported cask asset "
+                             f"({', '.join(_ARTIFACT_PREFERENCE)})")
                 return asset
         names = ", ".join(a["name"] for a in assets)
         sys.exit(f"error: no asset named {wanted!r}; available: {names}")

@@ -66,9 +66,9 @@ pinning a wheel that does not build everywhere. Compare each resource URL with
 its checksum from the PyPI sdist, and never copy a checksum from a failed
 install message without checking the downloaded bytes.
 
-For a version bump, `brew bump-formula-pr --no-audit --no-browse --write-only
---version=<new> <ref>` edits the file without opening a PR, as the workflows do.
-It keeps a changed URL and checksum together. After any edit, rebuild from source
+For a version bump, run the bump command and flags the tap's update workflow
+uses (read `update-formulas.yml`), writing the file without opening a PR. It
+keeps a changed URL and checksum together. After any edit, rebuild from source
 and test: audit alone is not enough to prove the resources build.
 
 ## 4. Repair casks

@@ -188,8 +188,11 @@ def arch_for(artifact: str) -> str | None:
         "arm64": ("arm64", "aarch64", "apple-silicon", "applesilicon"),
         "x86_64": ("x86_64", "x86-64", "amd64", "intel"),
     }
+    # Require non-alphanumeric boundaries so a product name that merely contains a
+    # marker (``IntelliJ``) is not read as an architecture.
     found = {arch for arch, needles in markers.items()
-             if any(needle in lowered for needle in needles)}
+             if any(re.search(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", lowered)
+                    for needle in needles)}
     # A name mentioning both (a universal artifact) constrains nothing.
     return found.pop() if len(found) == 1 else None
 
@@ -287,6 +290,7 @@ def main() -> None:
     token = normalize(args.name or repo)
     # `token` becomes a path segment below; an absolute-looking `--name` would make
     # pathlib's `/` discard the Casks/ prefix and write outside the tap.
+    repo_root = tap_root(args.tap_dir)
     if "/" in token or "\\" in token:
         sys.exit(f"error: --name {args.name!r} must not contain path separators")
     # Same grammar update-cask-dispatch.yml validates its payload against. A token
@@ -348,9 +352,10 @@ def main() -> None:
     stanza, hint = stanza_for(stanza_artifact, artifact, token, args.pkg_id)
     arch = arch_for(artifact)
 
-    repo_root = tap_root(args.tap_dir)
     out = repo_root / "Casks" / f"{token}.rb"
     out.parent.mkdir(exist_ok=True)
+    if out.exists():
+        sys.exit(f"error: {out} already exists; refusing to overwrite it")
     out.write_text(render(token, repo, version, sha, url_template, desc,
                           homepage, stanza, arch))
     print(f"==> Wrote {out.relative_to(repo_root)} (version {version})")

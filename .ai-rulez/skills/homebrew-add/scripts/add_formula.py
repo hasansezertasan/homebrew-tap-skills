@@ -336,6 +336,8 @@ def render(name: str, info: dict, sdist_url: str, sdist_sha: str,
            extras: str = "") -> str:
     """Render the Ruby formula source."""
     test_command = test_command or default_test_command(name)
+    # Escape for the double-quoted Ruby literal; `#{bin}` interpolation stays live.
+    test_command = test_command.replace("\\", "\\\\").replace('"', '\\"')
     homepage = (info.get("project_urls") or {}).get("Homepage") \
         or info.get("home_page") or f"https://pypi.org/project/{name}/"
     lines = [
@@ -451,7 +453,15 @@ def main() -> None:
     info = release["info"]
     name = normalize(info["name"])
     version = info["version"]
-    sdist_url, sdist_sha, _ = sdist_for(info["name"], version)
+    try:
+        class_name(name)
+    except ValueError as exc:
+        sys.exit(f"error: {exc}")
+    sdist_url, sdist_sha, is_sdist = sdist_for(info["name"], version)
+    if not is_sdist:
+        # virtualenv_install_with_resources builds the stable archive from source.
+        sys.exit(f"error: {name} {version} publishes no sdist, so the formula's "
+                 "stable archive cannot be built from source; write it by hand.")
 
     if args.python:
         # `--python python` would otherwise raise IndexError on the split below.
@@ -505,6 +515,8 @@ def main() -> None:
     repo = tap_root(args.tap_dir)
     out = repo / "Formula" / f"{name}.rb"
     out.parent.mkdir(exist_ok=True)
+    if out.exists():
+        sys.exit(f"error: {out} already exists; refusing to overwrite it")
     out.write_text(
         render(name, info, sdist_url, sdist_sha, python_formula, resources,
                build_deps, args.test_command, args.extras))

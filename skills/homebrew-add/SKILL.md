@@ -121,7 +121,6 @@ the tap README distinguishing `brew install --formula` from `--cask`.
    evidence, catalog freshness and local checks. If skills are not
    auto-discovered, read its sibling `SKILL.md`.
 
-Keep one formula or cask per pull request. Use a Conventional Branch name
-(`feature/add-<name>-formula`) and Conventional Commit title (`feat: add <name>
-formula` or `feat: add <name> cask`), include verification in the PR body, and never
-push straight to `main`. Pushing and opening the PR follow the user's approval rules.
+Follow the tap's own `AGENTS.md`, `CONTRIBUTING.md` and PR template for branch
+names, commit titles and review flow, and include the verification evidence in
+the PR body. Pushing and opening the PR follow the user's approval rules.

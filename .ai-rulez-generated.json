@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:89e57be0f94444b77aa29a610d426edc0de894e26c5e38a2fb37d119e35d31c5",
+  "source_hash": "blake3:4b0bc1706ad303686ac64c7fcefbf6bf644eb3aa4472abbe0c6ddced74dc4be2",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -19,7 +19,7 @@
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:22c4c553c2d99cf94bca8912518a651170d6ddffae816cfe26619eaad95dc383",
+      "content_hash": "blake3:902c09df068fc649d61029844b98e6015447c3b9e89aa97915170761fc0664ad",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {
@@ -31,11 +31,11 @@
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/add_cask.py": {
-      "content_hash": "blake3:23826b537e3cb764d7b394cf769e262ae4bb2860482c528c3fe22ef24abe6bc3",
+      "content_hash": "blake3:6c8dff2adf94484be1f24d0505f9b79470f9202e662b559da020b04a466e06f8",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/add_formula.py": {
-      "content_hash": "blake3:98da8e9e0ba539c02b72f0bd16ce1d43c3cd7cb6400acc310224243efa44958f",
+      "content_hash": "blake3:a4a827ee17da9763500582a27426ff45ab0b5c579727cda96b382b21514896c5",
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/tap_name.py": {
@@ -43,7 +43,7 @@
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/SKILL.md": {
-      "content_hash": "blake3:bc7c63fb9d9b33d1d103c4c86f2acb4f22b25cf97d4fd2d8184dc93aed7a3b57",
+      "content_hash": "blake3:907afb908f34e5d61f8ab0be2bd216d59032ec71818eaedf8826f5e846877af5",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/index.md": {
@@ -55,7 +55,7 @@
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/references/repair-cases.md": {
-      "content_hash": "blake3:3ea9018a8999cd38a0773a461e96cdeb71edccb61f2bd92bda40a4dc9afd0a60",
+      "content_hash": "blake3:e4d9cfd9e4997d693d749597df6a768592fd98705f31572510fb871ccee62645",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {
@@ -103,7 +103,7 @@
       "mode": "0644"
     },
     "skills/homebrew-update-triage/SKILL.md": {
-      "content_hash": "blake3:7513c60dd5201be026b3583909a6d98e93d11b88c5a2b1612af6170c0c469522",
+      "content_hash": "blake3:3b4c5a89815ac8b6786e4df56a2d6e73c138b566d8c26ed017e146ba64c3cb3f",
       "mode": "0644"
     },
     "skills/homebrew-update-triage/index.md": {

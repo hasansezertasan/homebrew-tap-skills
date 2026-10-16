@@ -65,7 +65,8 @@ explicit approval because the workflows publish.
 ## Reproduce deliberately
 
 For a confirmed, validated existing name, a local reproduction mirrors the
-workflow without opening a PR:
+workflow without opening a PR. Take the exact commands and flags from the tap's
+update workflow; the ones below are illustrative:
 
 ```sh
 : "${NAME:?Set NAME to a confirmed, validated formula token}"

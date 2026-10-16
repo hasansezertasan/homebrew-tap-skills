@@ -27,6 +27,12 @@ class FromRemoteTest(unittest.TestCase):
             "acme/tools",
         )
 
+    def test_scp_style_without_user(self) -> None:
+        self.assertEqual(
+            tap_name.from_remote("github.com:acme/homebrew-tools.git"),
+            "acme/tools",
+        )
+
     def test_repository_without_prefix(self) -> None:
         self.assertEqual(
             tap_name.from_remote("https://github.com/acme/tools.git"),

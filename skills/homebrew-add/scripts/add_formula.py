@@ -17,9 +17,9 @@ import re
 import shutil
 import subprocess
 import sys
-import urllib.request
 from pathlib import Path
 
+import url_fetch
 from tap_name import resolve as resolve_tap
 from tap_name import tap_root
 
@@ -49,8 +49,7 @@ _LICENSE_BY_CLASSIFIER = {
 
 def fetch_json(url: str) -> dict:
     """Fetch and decode a JSON document, failing loudly on HTTP errors."""
-    with urllib.request.urlopen(url) as response:  # noqa: S310 - trusted PyPI host
-        return json.load(response)
+    return url_fetch.get_json(url)
 
 
 def pypi_release(name: str, version: str | None = None) -> dict:

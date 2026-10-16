@@ -7,12 +7,27 @@ evidence from the relevant guide.
 ## Evidence gaps
 
 - **Model trials.** The eval cases in each skill's `evals/` are desk exercises
-  with rubrics. None has been run against a model yet, so no skill is shown to
-  pass its cases. Run `ai-rulez eval run` (the activation ranking is offline and
-  informational) and record the runner, model, run count and cost before making
-  any claim. Authenticated model evaluations stay out of CI.
-- **Host installs and skill use.** [Host support](host-support.md) records no
-  successful plugin installation and no skill-use run for any host.
+  with rubrics. One partial run exists: on 2026-10-16 `ai-rulez eval run
+  homebrew-verify --runs 1 --no-write --model sonnet` (`claude-plugin-eval`
+  runner, `--trust-plugin`) passed its 3 cases at about $0.14. That is one run of
+  one skill, so the other five skills are not shown to pass their cases and this
+  one is not a stable result. Run `ai-rulez eval run` for the rest (the
+  activation ranking is offline and informational) and record the runner, model,
+  run count and cost before making any claim. Authenticated model evaluations
+  stay out of CI. Also open: the runner builds its temporary plugin copy as
+  `skills/<name>/`, so a skill's `../../references/contract.md` link points at
+  `references/` beside `skills/`, which the copy does not appear to contain. The
+  transcripts show the contract was never read in that run. The generated root
+  skills link `references/contract.md`, which exists, so installed plugins are
+  not affected; only eval runs lack the contract. The copy was removed after the
+  run, so this is inferred from the layout and the missing read, not inspected.
+  `--runner-arg --trust-plugin` is required without a terminal and
+  `--runner-arg --keep-temp` keeps transcripts.
+- **Host installs and skill use.** [Host support](host-support.md) records the
+  plugin installing on Claude Code and Codex (macOS) and one skill answering a
+  desk prompt on each. That is one prompt and one run per host: no pass rate,
+  and no skill has run against a real tap. OpenCode, pi and other agents are not
+  evaluated.
 - **Real taps.** No skill has run against a real tap. The workflow-derived
   examples in each `references/` file are not recorded `brew` runs. Needs macOS
   with Homebrew and a tap made from the template.

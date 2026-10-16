@@ -16,13 +16,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
-import os
 import re
 import sys
 import urllib.error
-import urllib.request
 
+import url_fetch
 from tap_name import resolve as resolve_tap
 from tap_name import tap_root
 
@@ -38,21 +36,9 @@ _PLACEHOLDER_SHA = "0" * 64
 _PLACEHOLDER_VERSION = "0.0.0"
 
 
-def _request(url: str, *, accept: str = "application/vnd.github+json") -> urllib.request.Request:
-    """Build a GitHub API request, authenticating from the environment if possible."""
-    req = urllib.request.Request(url)
-    req.add_header("Accept", accept)
-    req.add_header("User-Agent", "homebrew-tap-add-cask")
-    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-    if token:
-        req.add_header("Authorization", f"Bearer {token}")
-    return req
-
-
 def fetch_json(url: str) -> dict:
     """Fetch and decode a JSON document from the GitHub API, failing loudly."""
-    with urllib.request.urlopen(_request(url)) as response:  # noqa: S310 - trusted host
-        return json.load(response)
+    return url_fetch.get_json(url, accept="application/vnd.github+json")
 
 
 def normalize(name: str) -> str:
@@ -120,7 +106,7 @@ def sha256_of(url: str) -> str:
     """Download a release asset and return its sha256, streaming to bounded memory."""
     print(f"==> Downloading {url} to compute sha256", file=sys.stderr)
     digest = hashlib.sha256()
-    with urllib.request.urlopen(_request(url, accept="application/octet-stream")) as response:  # noqa: S310
+    with url_fetch.open_url(url, accept="application/octet-stream") as response:
         for chunk in iter(lambda: response.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()

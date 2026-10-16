@@ -11,7 +11,11 @@ from pathlib import Path
 
 def from_remote(remote: str) -> str | None:
     """Convert a GitHub remote URL to ``owner/tap`` notation."""
-    match = re.search(r"github\.com[/:]([^/]+)/([^/#?]+?)(?:\.git)?$", remote.strip())
+    match = re.fullmatch(
+        r"(?:(?:https?|ssh|git)://(?:[^@/]+@)?|(?:[a-zA-Z0-9_.-]+@)?)github\.com[/:]"
+        r"([^/]+)/([^/#?]+?)(?:\.git)?/?",
+        remote.strip(),
+    )
     if not match:
         return None
     owner, repository = match.groups()

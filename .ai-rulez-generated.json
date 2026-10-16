@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:d62d66dace3c0a8320af303ef34fbc228dd8e102db898f4dddb2709b308e26be",
+  "source_hash": "blake3:35a01d4c5e75417fe4487e2e184ed4f8ad2edd8469d9ef09ec6abf2fbcc949d9",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -39,7 +39,7 @@
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/tap_name.py": {
-      "content_hash": "blake3:512e325ed0072affefb35b0f56e7dff23e246ea8cd0dc69212d4420312ac3339",
+      "content_hash": "blake3:3be3fed5ce06445687e3ae7a30b8102df4c9ba004397aac955ba6cffa11f5210",
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/url_fetch.py": {

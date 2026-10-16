@@ -27,6 +27,12 @@ class FromRemoteTest(unittest.TestCase):
             "acme/tools",
         )
 
+    def test_scp_style_without_user(self) -> None:
+        self.assertEqual(
+            tap_name.from_remote("github.com:acme/homebrew-tools.git"),
+            "acme/tools",
+        )
+
     def test_repository_without_prefix(self) -> None:
         self.assertEqual(
             tap_name.from_remote("https://github.com/acme/tools.git"),
@@ -35,6 +41,15 @@ class FromRemoteTest(unittest.TestCase):
 
     def test_non_github_remote(self) -> None:
         self.assertIsNone(tap_name.from_remote("https://example.com/acme/tools.git"))
+
+    def test_lookalike_host(self) -> None:
+        self.assertIsNone(tap_name.from_remote("https://notgithub.com/acme/tools.git"))
+
+    def test_trailing_slash(self) -> None:
+        self.assertEqual(
+            tap_name.from_remote("https://github.com/acme/homebrew-tools/"),
+            "acme/tools",
+        )
 
 
 class TapRootTest(unittest.TestCase):

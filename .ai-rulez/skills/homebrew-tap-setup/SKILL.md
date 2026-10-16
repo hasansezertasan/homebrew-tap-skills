@@ -1,7 +1,7 @@
 ---
 type: Playbook
 title: Homebrew Tap Setup
-description: Set up a new Homebrew tap by rendering copier-homebrew-tap with Copier, then configure repository naming (homebrew-<tap>), Actions settings, the producer dispatch token and bottle publishing through the pr-pull label, and hand the first formula or cask to homebrew-add and homebrew-verify. Use for new-tap bootstrap, for adopting the template in an existing tap, and for questions about copier copy or update, why the tap has no update PAT, or why update PRs get no bottles.
+description: Set up a new Homebrew tap by rendering copier-homebrew-tap with Copier, then configure repository naming (homebrew-<tap>), Actions settings, the producer dispatch token and bottle publishing through the pr-pull label, and hand the first formula or cask to homebrew-add and homebrew-verify. Use for new-tap bootstrap, for adopting the template in an existing tap, and for questions about copier copy or update, or why update PRs get no bottles unless the optional `WORKFLOW_TOKEN` is set.
 x-ai-rulez:
   kind: skill
   id: homebrew-tap-setup
@@ -90,7 +90,7 @@ Explain the distinct credentials before requesting any secret:
 
 | Consumer | Credential and access |
 | --- | --- |
-| Weekly livecheck updates and dispatch receivers (branch push and PR creation) | Built-in `GITHUB_TOKEN`; the tap defines no update PAT, and no workflow reads `WORKFLOW_TOKEN` or `HOMEBREW_TAP_TOKEN`. |
+| Weekly livecheck updates, dispatch receivers and the Cobo drift sync (branch push and PR creation) | Built-in `GITHUB_TOKEN` by default. These workflows read the optional repository secret `WORKFLOW_TOKEN` first and fall back to `GITHUB_TOKEN`; no workflow reads `HOMEBREW_TAP_TOKEN`. |
 | `brew pr-pull` (`publish.yml`) | Built-in `GITHUB_TOKEN` with Contents, Pull requests and Actions/Checks/Issues read as the workflow declares; it pushes the bottle commit to `main`. |
 | Dispatch failure issue (`update-cask-dispatch.yml`) | Built-in `GITHUB_TOKEN` with Issues: write; the destination is `github.repository`. |
 | PR title and branch-name lint | Built-in `GITHUB_TOKEN` with Pull requests: write. |
@@ -105,10 +105,12 @@ Explain what `GITHUB_TOKEN` costs. A PR opened with it does not trigger
 `tests.yml`, so update PRs carry no bottle build. The bump jobs therefore audit,
 build from source and test a formula bump inside the run that opens the PR; casks
 are audited. Bottles come later: close and reopen the PR or push to its branch to
-run `tests.yml`, and only after that apply the `pr-pull` label. Using a PAT or
-GitHub App token for the PR steps is a design change that needs separate
-agreement, including expiry, renewal and permissions; do not recommend blanket
-`repo`, admin or Actions-write privileges.
+run `tests.yml`, and only after that apply the `pr-pull` label. The same applies
+to the Cobo drift PR. The optional `WORKFLOW_TOKEN` removes that manual step:
+offer it, never require it. Recommend a fine-grained token scoped to the tap with
+Contents and Pull requests write, or a GitHub App token, and agree its expiry and
+renewal first; do not recommend blanket `repo`, admin or Actions-write
+privileges.
 
 Configure secrets through Settings → Secrets and variables → Actions or secure
 CLI input. Never print values, ask for them in chat, commit them or embed them in

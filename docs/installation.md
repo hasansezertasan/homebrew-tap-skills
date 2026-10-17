@@ -75,7 +75,9 @@ Alternatively, add the clone's `skills/` directory to OpenCode's configuration:
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "skills": ["/absolute/path/to/homebrew-tap-skills/skills"]
+  "skills": {
+    "paths": ["/absolute/path/to/homebrew-tap-skills/skills"]
+  }
 }
 ```
 

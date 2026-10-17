@@ -67,7 +67,9 @@ evolves.
   the one in `homebrew-tap-setup`.
 - **`CONTRIBUTING.md` and `docs/installation.md`.** The template's versions plus
   repo-specific content: a "Homebrew Tap Skills development" section, and the
-  install prompt with its "Then use it" table. They are template-owned, so
+  install prompt with its "Then use it" table. The OpenCode config snippet uses
+  the `skills.paths` object that this repo's own `opencode.json` uses, where the
+  template shows a bare array; OpenCode's published docs show neither shape. They are template-owned, so
   future template changes merge into them.
 - **`.ai-rulez/context/homebrew-tap-skills.md`.** Names the npm commands and the
   `package.json` version source, so the regenerated `AGENTS.md` matches. The skills

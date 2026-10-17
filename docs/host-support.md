@@ -10,7 +10,7 @@ does not scan root `skills/`; the root `opencode.json` points it there.
 | Codex | `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json` | `ai-rulez verify --plugin`; 2026-10-16, codex-cli 0.162.1, macOS: `codex plugin marketplace add <checkout of main at 2ce096b>` then `codex plugin add homebrew-tap-skills@homebrew-tap-skills` installed 0.1.0 (enabled) with all six skills present in the cache. Skill use, same day: `codex exec --skip-git-repo-check --json "$CODEX_PROMPT" < /dev/null` in an empty directory (the prompt is a positional argument; `< /dev/null` only stops codex waiting on stdin) read the installed `homebrew-update-triage/SKILL.md` and its references and answered from them; one prompt, one run, not a task-success result |
 | OpenCode | `opencode.json` (`skills.paths`) | Not evaluated |
 | pi | `package.json` (`pi-package` keyword, `pi.skills` pointing at `./skills`) | Not evaluated |
-| Antigravity | root `plugin.json` adapter, kept equal to the Claude manifest by `scripts/check-repo.mjs` | Not evaluated |
+| Antigravity | root `plugin.json` adapter; `scripts/check-repo.mjs` checks its `$schema` and that its `name` and `description` match the Claude manifest | Not evaluated |
 
 The Claude Code and Codex installs above read version 0.1.0 from an unreleased tree. The version now reads 0.0.0 until the first release (see `docs/decisions/0002-adopt-the-copier-skill-repo-template.md`).
 | Other agents | `AGENTS.md` | Not evaluated |

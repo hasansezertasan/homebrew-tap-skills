@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:483bef3c9f7e6ccf26c24acddecd90ea8bd1b927b662a1c709f7323a095a9e59",
+  "source_hash": "blake3:0dcfe0f921503bda291614d548daa5fe93735297f29333b9578bf46b06d28f70",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -16,6 +16,10 @@
     },
     ".codex-plugin/plugin.json": {
       "content_hash": "blake3:8f324e92602db8226592adfdd2656537cb4001aa4c627b2e5c307d18a823e3ff",
+      "mode": "0644"
+    },
+    "package.json": {
+      "content_hash": "blake3:62b9aa636438eb06289370c8f192e27272f4e843c550b88ad8e5e99ae4ae699c",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
@@ -146,5 +150,17 @@
       "content_hash": "blake3:a69a37b976efd4e423986127807724160de1912708913b85199514deecda6c1c",
       "mode": "0644"
     }
+  },
+  "managed": {
+    "package.json": [
+      "name",
+      "version",
+      "description",
+      "author",
+      "repository",
+      "keywords",
+      "pi",
+      "files"
+    ]
   }
 }

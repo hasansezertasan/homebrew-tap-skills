@@ -46,7 +46,7 @@ or answer the prompts; `copier.yml` is the source for question names and
 defaults. Pin the template version with `--vcs-ref` when the user asks for one.
 
 ```sh
-uvx copier@9.18.2 copy gh:hasansezertasan/copier-homebrew-tap <directory>
+uvx copier@9.19.1 copy gh:hasansezertasan/copier-homebrew-tap <directory>
 ```
 
 Copier renders files only. Creating the GitHub repository, `git init`, the

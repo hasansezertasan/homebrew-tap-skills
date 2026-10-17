@@ -1,21 +1,21 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:b406ccb63d636c8573392a937bb0f9da47acad87af46000007a2cb8c2263d184",
+  "source_hash": "blake3:26e9ff60d09021c4ad088c3fdebe5623b0e7fe3eaffd4161df1bb92c8c54f01a",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
       "mode": "0644"
     },
     ".claude-plugin/marketplace.json": {
-      "content_hash": "blake3:015290eb99e9a559291eeb062374a56cdf477b0f230a1cb07201248e6c800985",
+      "content_hash": "blake3:cf5637a0a13951d84be9e4a7528b0b249014c1c9670b1063def8135c7e11d8c5",
       "mode": "0644"
     },
     ".claude-plugin/plugin.json": {
-      "content_hash": "blake3:fc8b1161d76270f8ce6bc90394b47b4a2e79d863e1d8f6a0bf55717eb45f1b21",
+      "content_hash": "blake3:cf2468f897b7dcbf13ac8b5ff527c094c51f12f73e986f965ca976e823459958",
       "mode": "0644"
     },
     ".codex-plugin/plugin.json": {
-      "content_hash": "blake3:8f324e92602db8226592adfdd2656537cb4001aa4c627b2e5c307d18a823e3ff",
+      "content_hash": "blake3:17d9c57c48e6e2d769d01b763f2539410d7c171a77c124d36de7440f3aa9c8b5",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {

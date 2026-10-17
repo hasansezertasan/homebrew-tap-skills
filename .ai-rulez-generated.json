@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:b406ccb63d636c8573392a937bb0f9da47acad87af46000007a2cb8c2263d184",
+  "source_hash": "blake3:483bef3c9f7e6ccf26c24acddecd90ea8bd1b927b662a1c709f7323a095a9e59",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -83,7 +83,7 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/SKILL.md": {
-      "content_hash": "blake3:b970311d72b0ebdfedc6f0d5da78b340be4674cfc1eb889b678e08262c010a1f",
+      "content_hash": "blake3:2596303c4e1472a9f4f26601daa5934a6cf8841a22b56685612638fe0505a2ee",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/agents/openai.yaml": {

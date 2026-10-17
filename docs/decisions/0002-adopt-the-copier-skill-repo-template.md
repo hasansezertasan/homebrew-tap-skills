@@ -18,7 +18,10 @@ evolves.
   release manifest (now at the repo root) start at the template's `0.0.0`, and the
   first release is `0.1.0` through `initial-version`. The generated plugin
   manifests therefore read `0.0.0` until that release. The open release PR is
-  rebuilt by release-please on the next push to `main`.
+  rebuilt by release-please on the next push to `main`. This moves the plugin
+  version back from the `0.1.0` it read before: `docs/host-support.md` records
+  installs of that unreleased `0.1.0`, which were evidence about a pre-release
+  tree, not a release.
 - **Release guard.** `scripts/release_guard.py` and its test are replaced by the
   template's `release-merge.mjs` and `release-guard.mjs`, which implement the same
   sole-pending-release rule and add a version-drift check.
@@ -26,12 +29,15 @@ evolves.
   `.config/release-please-manifest.json` moved to the repo root as the template
   places them, with `extra-files` bumping the plugin manifests.
 - **CI and release workflows, Renovate config, `.node-version`,
-  `scripts/check-repo.mjs`.** Taken as rendered. The old `check` workflow's `ref`
+  `scripts/check-repo.mjs`.** Taken as rendered. Renovate now extends
+  `local>hasansezertasan/renovate-config`, which ADR 0001 had deliberately not
+  adopted. The old `check` workflow's `ref`
   input is gone: the template's release workflow regenerates the plugin output on
   the release PR branch itself.
 - **Required check name.** The check job is now `check`, not `validate`. Branch
   protection on `main` must require `check` instead; that setting lives on GitHub,
-  so this change does not make that edit.
+  so this change does not make that edit. Change it when merging: until then
+  the old `validate` requirement never reports and every PR stays blocked.
 - **Task runner.** The mise tasks are gone: `npm run generate`, `npm run check`,
   `npm test` and `npm run eval` replace `agents:generate`, `check`, `test` and
   `agents:eval`. ai-rulez 5.3.0 is pinned in `package.json` instead of mise.
@@ -52,6 +58,8 @@ evolves.
   says so and points at copier-skill-repo#43.
 - **Python unit tests and eval.** `npm test` runs `tests/` with `python -B`, and
   `check.yml` has one extra step for them, because the template ships no tests.
+  The npm script needs a `python` on `PATH` (`mise install` provides one from
+  `.config/mise.toml`); the CI step uses `python3`.
   `npm run eval` is the former `agents:eval` task (offline, informational, not a
   gate).
 - **mise.** `.config/mise.toml` keeps only the tool pins: Python, and the

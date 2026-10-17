@@ -11,6 +11,8 @@ does not scan root `skills/`; the root `opencode.json` points it there.
 | OpenCode | `opencode.json` (`skills.paths`) | Not evaluated |
 | pi | `package.json` (`pi-package` keyword, `pi.skills` pointing at `./skills`) | Not evaluated |
 | Antigravity | root `plugin.json` adapter, kept equal to the Claude manifest by `scripts/check-repo.mjs` | Not evaluated |
+
+The Claude Code and Codex installs above read version 0.1.0 from an unreleased tree. The version now reads 0.0.0 until the first release (see `docs/decisions/0002-adopt-the-copier-skill-repo-template.md`).
 | Other agents | `AGENTS.md` | Not evaluated |
 
 Structural validation and completed model turns do not establish task success

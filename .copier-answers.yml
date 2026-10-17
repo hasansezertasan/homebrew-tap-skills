@@ -1,0 +1,13 @@
+_commit: v0.2.0
+_src_path: https://github.com/hasansezertasan/copier-skill-repo
+author_name: Hasan Sezer Tasan
+author_url: https://github.com/hasansezertasan
+description: 'Skills for operating a Homebrew tap: set it up, then add, fix, triage,
+    remove, and verify formulae and casks.'
+github_owner: hasansezertasan
+keywords: homebrew, tap, formula, cask, macos
+license: MIT
+placeholder_skill: hello
+publish_to_npm: false
+repo_name: homebrew-tap-skills
+

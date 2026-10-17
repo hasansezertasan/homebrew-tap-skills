@@ -47,7 +47,8 @@ Skills are authored in `.ai-rulez/`; root `skills/`, the plugin manifests and
 `AGENTS.md` are generated and committed. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```sh
-mise install
-mise run agents:generate
-mise run check
+npm ci
+npm run generate
+npm run check
+npm test
 ```

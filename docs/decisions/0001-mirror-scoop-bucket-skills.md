@@ -1,6 +1,6 @@
 # 0001: Mirror scoop-bucket-skills
 
-Status: accepted. Date: 2026-10-16.
+Status: accepted; partly superseded by [0002](0002-adopt-the-copier-skill-repo-template.md): the version source is now `package.json`, Renovate extends the shared preset, and the required check is `check`. Date: 2026-10-16.
 
 [`scoop-bucket-skills`](https://github.com/hasansezertasan/scoop-bucket-skills)
 is the reference for how this plugin is packaged, released and evaluated, and

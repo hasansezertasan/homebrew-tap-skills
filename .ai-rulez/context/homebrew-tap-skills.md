@@ -40,9 +40,8 @@ interface live in `.ai-rulez/config.toml`; it has no literal version, which
 - Maintainer governance stays in `AGENTS.md`, `CONTRIBUTING.md` and `docs/`;
   do not inject it into distributed skills.
 - Keep host-loaded paths (`.mcp.json`, `hooks/`, `agents/`, `commands/`) out of
-  the repository root: both catalogs install the root. The template turns off the
-  ai-rulez rule that catches this, so nothing checks it automatically yet
-  (copier-skill-repo#43).
+  the repository root: both catalogs install the root, and
+  `scripts/check-repo.mjs` fails if one appears.
 - Scope support claims to saved evidence; see `docs/host-support.md`.
 
 #### Releases

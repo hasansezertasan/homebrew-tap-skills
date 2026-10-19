@@ -5,7 +5,8 @@ Homebrew Tap Skills publishes the same skills to five runtimes: Claude Code, Cod
 Your agent can do the install. Copy this prompt into your coding agent:
 
 ```text
-Install the homebrew-tap-skills skills in project scope: pick the best
+Install the homebrew-tap-skills skills, in project scope where your runtime
+supports it: pick the best
 installation method for you from https://github.com/hasansezertasan/homebrew-tap-skills/blob/main/docs/installation.md
 
 Then use its homebrew-tap-setup skill to set up a new Homebrew tap from
@@ -40,7 +41,7 @@ Each request below starts a skill. Say what you want in your own words.
 
 You were pointed here to install the skills. Do this:
 
-1. Install in project scope, inside the tap repository: the skills only apply to a tap, so a user-wide install adds them to every unrelated repository and leaves a copy that nothing updates. Pick the route in the table below that you can run yourself on your platform. Prefer a route native to your runtime over a manual clone.
+1. On Claude Code, install in project scope, inside the tap repository: the skills only apply to a tap, so a user-wide install adds them to every unrelated repository and leaves a copy that nothing updates. The other routes below install as documented for their runtime (some are user-wide); do not change them. Pick the route in the table below that you can run yourself on your platform. Prefer a route native to your runtime over a manual clone.
 2. If a route needs a slash command or an interactive step you cannot run, give the user the exact command and ask them to run it. Do not guess at another command.
 3. Confirm the install with the route's confirm step.
 4. Plugin and skills installs usually load in a new session, not in the conversation that installed them. If the skills are not available to you now, read `skills/<name>/SKILL.md` from a clone of this repository (a temporary clone is fine) and tell the user to start a new session so the installed skills load next time.
@@ -58,7 +59,7 @@ You were pointed here to install the skills. Do this:
 | Antigravity | git only; see [Antigravity](#antigravity) | reinstall with the same command, then restart | `agy plugin list` shows the plugin as installed and enabled; restart Antigravity to load it |
 | Manual | clone this repository and read `skills/<name>/SKILL.md`, or copy `skills/*` into your agent's skills directory | `git pull` in the clone, then copy `skills/*` again if you copied them | the clone's `git rev-parse HEAD` matches the latest commit on `main`; if you copied the skills, `for d in <clone>/skills/*/; do diff -r "$d" "<destination>/$(basename "$d")"; done` prints nothing (compare skill by skill: the destination may hold skills from other sources) |
 
-Project scope writes `.claude/settings.json` (`enabledPlugins`) in the tap; commit it so every contributor gets the same skills and version. A copy installed earlier at user scope stays at its old version beside the project one; remove it with `claude plugin uninstall homebrew-tap-skills@homebrew-tap-skills --scope user`.
+Project scope writes `.claude/settings.json` (`enabledPlugins`) in the tap; commit it so contributors share the same enablement. Each contributor still installs the plugin once, and installed copies update independently, so it does not pin a version. Project scope is not yet recorded in [host support](host-support.md), which covers a user-scope install only; treat it as unverified until it is. A copy installed earlier at user scope stays at its old version beside the project one; remove it with `claude plugin uninstall homebrew-tap-skills@homebrew-tap-skills --scope user`.
 
 The Pi package declares the `pi-package` keyword and a `pi.skills` entry per skill in `package.json`, written by `npm run generate`. To compare an installed version with the latest, use the version in `.claude-plugin/plugin.json` or the repository's latest GitHub release.
 

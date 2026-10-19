@@ -11,6 +11,7 @@ the tap checkout and a concrete outcome.
 | Add a formula (PyPI CLI) or a cask (macOS app) | `homebrew-add` |
 | Repair livecheck, resources, checksums or cask stanzas | `homebrew-fix-formula` |
 | Understand a failing scheduled or dispatch update | `homebrew-update-triage` |
+| Make a package's releases update this tap | `homebrew-producer-dispatch` |
 | Retire a formula or cask and handle dependents | `homebrew-remove-or-deprecate` |
 | Decide whether a change is ready for a PR | `homebrew-verify` |
 

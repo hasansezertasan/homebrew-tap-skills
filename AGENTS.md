@@ -28,8 +28,10 @@ interface live in `.ai-rulez/config.toml`; it has no literal version, which
   task name, path, or workflow filename there and in every skill that cites it,
   together.
 - Skills read the tap's workflows and README for exact behavior instead of
-  hardcoding flags; keep it that way. The scaffolders' own options are the one
-  exception, because they ship here.
+  hardcoding flags; keep it that way. The scaffolders' own options, and the
+  event types and payload keys `homebrew-producer-dispatch`'s `bump_job.py`
+  writes, are the one exception, because they ship here; check them against the
+  tap's receivers.
 - Never scaffold with `brew create`: it writes into homebrew-core. Formulae and
   casks come from the `homebrew-add` scaffolders.
 - Skills never edit `.gitignore` or other template-managed files by hand.

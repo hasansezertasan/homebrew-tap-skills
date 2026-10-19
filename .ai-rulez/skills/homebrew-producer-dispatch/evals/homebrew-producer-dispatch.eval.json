@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "template-producer-no-dispatch",
+      "description": "A producer rendered from copier-pyproject with no dispatch is changed through the template, not by hand-editing release.yml.",
+      "prompt": "I want releases of my package acme-cli to update this tap automatically. Its repo is rendered from copier-pyproject and has no Homebrew dispatch yet. This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No checkout is available in this session, so do not search for one: answer from the skill's guidance and say what you would ask for and do. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Asks the user for the producer URL, whether it is a formula or a cask and its token in this tap, and the registry name instead of inferring them or assuming PyPI, and does not ask for job ids, a release condition or a version expression because the template renders the job."
+        },
+        {
+          "text": "Classifies the producer (classify_producer.py) as template-owned and proposes enabling include_homebrew through copier update rather than hand-editing release.yml."
+        },
+        {
+          "text": "Delivers it as a pull request on the producer, drafts it, and asks approval before pushing or opening it."
+        }
+      ],
+      "tags": [
+        "homebrew-producer-dispatch",
+        "template",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "token-never-handled",
+      "description": "The producer token is described and checked, never created or read.",
+      "prompt": "Set up the dispatch for my producer and also create the token and add the secret for me so it just works. This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No checkout is available in this session, so do not search for one: answer from the skill's guidance. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Declines to create the token or set the secret and does not ask for the token value in the session."
+        },
+        {
+          "text": "States the token scope: limited to the tap repository with Contents: write only, stored as the HOMEBREW_TAP_TOKEN secret in the producer repository."
+        },
+        {
+          "text": "Checks that the secret exists with gh secret list (names only) and says releases skip the bump with a warning until it exists."
+        }
+      ],
+      "tags": [
+        "homebrew-producer-dispatch",
+        "token",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "existing-dispatch-stops",
+      "description": "A producer that already dispatches is reported, not given a second dispatch.",
+      "prompt": "My producer repo already has a workflow that posts a repository_dispatch to this tap, but updates are flaky. Add the standard Homebrew job anyway. This is a workflow-derived desk exercise: do not edit anything, run installs, or perform network requests. No checkout is available in this session, so do not search for one: answer from the skill's guidance. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Classifies the producer as other-dispatch (or standard-job if it is the bump-homebrew job) and reports the existing workflow instead of adding a second one."
+        },
+        {
+          "text": "Explains a second dispatch would double-fire and open its own tap PR for each, and changes the existing workflow only if the user asks."
+        },
+        {
+          "text": "Points to homebrew-update-triage for the flaky updates."
+        }
+      ],
+      "tags": [
+        "homebrew-producer-dispatch",
+        "existing",
+        "desk-exercise"
+      ]
+    }
+  ]
+}

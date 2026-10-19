@@ -10,6 +10,7 @@ remove and verify formulae and casks. This is a skills repository
 | `homebrew-add` | add a PyPI formula or a prebuilt macOS app cask |
 | `homebrew-fix-formula` | repair livecheck, resources, checksums, audit failures and cask stanzas |
 | `homebrew-update-triage` | diagnose failing scheduled or dispatch updates |
+| `homebrew-producer-dispatch` | open a PR so a package's releases update this tap |
 | `homebrew-remove-or-deprecate` | retire formulae and casks and handle dependents |
 | `homebrew-verify` | read-only pre-PR readiness gate |
 

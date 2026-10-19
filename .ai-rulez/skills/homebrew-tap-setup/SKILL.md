@@ -96,10 +96,11 @@ Explain the distinct credentials before requesting any secret:
 | PR title and branch-name lint | Built-in `GITHUB_TOKEN` with Pull requests: write. |
 | External producer repository calling `POST /repos/<owner>/<repo>/dispatches` | A fine-grained token scoped to the tap with Contents: write. Store it in the producer repository, not in the tap. |
 
-`GITHUB_TOKEN` is supplied by Actions, not a secret the user creates. Names such as
-`HOMEBREW_TAP_TOKEN` appear in other templates for pushing from a producer; if
-the user brings one, it belongs in the producer and no workflow here consumes it.
-Do not invent an alias or edit workflows to read one without agreed scope.
+`GITHUB_TOKEN` is supplied by Actions, not a secret the user creates. The
+producer-side secret is `HOMEBREW_TAP_TOKEN`, written into a producer's release
+workflow by `homebrew-producer-dispatch`; it belongs in the producer, and no
+workflow in the tap consumes it. Do not invent an alias or edit tap workflows to
+read it without agreed scope.
 
 Explain what `GITHUB_TOKEN` costs. A PR opened with it does not trigger
 `tests.yml`, so update PRs carry no bottle build. The bump jobs therefore audit,

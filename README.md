@@ -17,11 +17,12 @@ The quickest way is to give your agent the prompt in
 [docs/installation.md](docs/installation.md), which tells it to pick the best
 install route for itself.
 
-Install in Claude Code yourself:
+Install in Claude Code yourself, from inside the tap repository, at project
+scope (the skills only apply to a tap):
 
 ```sh
-/plugin marketplace add hasansezertasan/homebrew-tap-skills
-/plugin install homebrew-tap-skills@homebrew-tap-skills
+claude plugin marketplace add hasansezertasan/homebrew-tap-skills
+claude plugin install homebrew-tap-skills@homebrew-tap-skills --scope project
 ```
 
 Install in Codex yourself, from a checkout:

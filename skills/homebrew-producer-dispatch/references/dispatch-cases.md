@@ -26,12 +26,21 @@ in the repository that ships this skill.
 
 ## Known limits
 
-- `classify_producer.py` finds the job by its name (`bump-homebrew`, at any indent)
-  and a dispatch by `repos/<tap>/dispatches`, or a `repository: <tap>` line in a
-  workflow that uses `repository-dispatch`. A workflow that builds the repository
-  name from variables is not recognised and classifies as `none`.
-- It does not check the job's event type, so a producer's formula job and a wanted
-  cask job are the same collision; there is one `bump-homebrew` job per producer.
+- `classify_producer.py` is text matching over the workflows, not a YAML parser (the
+  scripts are standard library only), so its answer is a first pass. It finds the
+  job by its name (`bump-homebrew`, at any indent) and a dispatch by
+  `repos/<tap>/dispatches`, or a `repository: <tap>` line in a `repository-dispatch`
+  step. Whole-line comments are ignored; the tap matches whatever the case.
+- It does not recognise a repository name built from variables or `vars`, a dispatch
+  inside a reusable workflow or composite action, or YAML flow style. Those classify
+  as `none`, so the skill confirms from the workflows before it writes a job.
+- It counts jobs, not steps: two dispatch steps inside one `bump-homebrew` job count
+  once. It matches the target and the event type separately within a job, so a job
+  that sends `update-cask` to this tap and `update-formula` elsewhere reads as
+  wired for either kind. `--kind` compares the event type of the job, not of each
+  command.
+- There is one `bump-homebrew` job per producer, so a producer's formula job and a
+  wanted cask job are a collision, reported as `other-kind-job`.
 - `bump_job.py` hardcodes the receivers' event types, payload keys and name pattern,
   as the scaffolders hardcode their own options; the skill checks its output against
   the receivers.

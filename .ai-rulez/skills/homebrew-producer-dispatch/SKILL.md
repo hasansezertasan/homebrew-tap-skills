@@ -47,6 +47,12 @@ them from there:
 python3 <skill-dir>/scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REPO" --kind formula
 ```
 
+The result is a first pass from text matching, not a verdict. `none` never means
+there is certainly no dispatch: before writing a job, search the clone's workflows
+yourself for `dispatches`, `repository-dispatch` and the tap's name, including
+reusable workflows, composite actions and repository names built from variables.
+Read [dispatch evidence](references/dispatch-cases.md) for what it cannot see.
+
 | Result | Meaning | Action |
 | --- | --- | --- |
 | `standard-job` | A workflow already has the `bump-homebrew` job, and it dispatches to this tap. | Report it and stop. Show how it differs from the standard job only if asked; do not rewrite it. |

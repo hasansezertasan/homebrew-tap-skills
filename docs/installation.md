@@ -45,8 +45,8 @@ You were pointed here to install the skills. Do this:
 1. On Claude Code, install in project scope, inside the tap repository: the skills only apply to a tap, so a user-wide install adds them to every unrelated repository and leaves a copy that nothing updates. The other routes below install as documented for their runtime (some are user-wide); do not change them. Pick the route in the table below that you can run yourself on your platform. Prefer a route native to your runtime over a manual clone.
 2. If a route needs a slash command or an interactive step you cannot run, give the user the exact command and ask them to run it. Do not guess at another command.
 3. Confirm the install with the route's confirm step.
-4. Plugin and skills installs usually load in a new session, not in the conversation that installed them. If the skills are not available to you now, read `skills/<name>/SKILL.md` from a clone of this repository (a temporary clone is fine) and tell the user to start a new session so the installed skills load next time.
-5. If a route fails, fall back to the manual route. Do not report the install as done until you have confirmed the skills or read a `SKILL.md`.
+4. Plugin and skills installs usually load in a new session, not in the conversation that installed them. If the skills are not available to you now, you may read `skills/<name>/SKILL.md` from a clone of this repository (a temporary clone is fine) to do the user's task in this conversation, and tell the user to start a new session so the installed skills load next time. Reading a clone is not an install: it registers nothing for later sessions.
+5. If a route fails, fall back to the manual route. Report the install as done only after the route's confirm step succeeds. Never report it as done because you read a `SKILL.md` from a clone.
 6. Do not install other agent skills or switch to a different route unless this one fails.
 
 ## Routes
@@ -58,7 +58,7 @@ You were pointed here to install the skills. Do this:
 | OpenCode | git only; see [OpenCode](#opencode) | `git pull` in the clone | the skills are offered by OpenCode's `skill` tool in a new session |
 | Pi | `pi install git:github.com/hasansezertasan/homebrew-tap-skills` (not published to npm) | `pi update git:github.com/hasansezertasan/homebrew-tap-skills` (a bare `pi update` updates Pi itself), then restart Pi or reload resources | invoke one of the skills with `/skill:<name>` |
 | Antigravity | git only; see [Antigravity](#antigravity) | reinstall with the same command, then restart | `agy plugin list` shows the plugin as installed and enabled; restart Antigravity to load it |
-| Manual | clone this repository and read `skills/<name>/SKILL.md`, or copy `skills/*` into your agent's skills directory | `git pull` in the clone, then copy `skills/*` again if you copied them | the clone's `git rev-parse HEAD` matches the latest commit on `main`; if you copied the skills, `for d in <clone>/skills/*/; do diff -r "$d" "<destination>/$(basename "$d")"; done` prints nothing (compare skill by skill: the destination may hold skills from other sources) |
+| Manual | clone this repository, then copy `skills/*` into your agent's skills directory (reading `skills/<name>/SKILL.md` from the clone only lets you use the skills in the current conversation; it is not an install) | `git pull` in the clone, then copy `skills/*` again | `for d in <clone>/skills/*/; do diff -r "$d" "<destination>/$(basename "$d")"; done` prints nothing (compare skill by skill: the destination may hold skills from other sources) |
 
 Project scope writes `.claude/settings.json` (`enabledPlugins`) in the tap; commit it so contributors share the same enablement. Each contributor still installs the plugin once, and installed copies update independently, so it does not pin a version. Project scope is not yet recorded in [host support](host-support.md), which covers a user-scope install only; treat it as unverified until it is. A copy installed earlier at user scope stays at its old version beside the project one; remove it with `claude plugin uninstall homebrew-tap-skills@homebrew-tap-skills --scope user`.
 
@@ -74,7 +74,7 @@ mkdir -p ~/.agents/skills
 for skill in homebrew-tap-skills/skills/*/; do ln -s "$PWD/${skill%/}" ~/.agents/skills/; done
 ```
 
-Alternatively, add the clone's `skills/` directory to OpenCode's configuration:
+Alternatively, add the clone's `skills/` directory to OpenCode's configuration. The `skills` array (paths or URLs) is in OpenCode's published config schema, which marks the older `{paths, urls}` object form deprecated, and OpenCode's source reads it, but its documentation pages do not describe it:
 
 ```json
 {
@@ -87,7 +87,7 @@ Alternatively, add the clone's `skills/` directory to OpenCode's configuration:
 
 To update, run `git pull` in the clone; nothing was copied.
 
-> **Open question.** The official OpenCode documentation shows no way for an npm package to ship skills, so there is no npm route for OpenCode. If that changes, add it here.
+> **No npm route.** OpenCode has no npm-native skill channel: nothing scans `node_modules` for skills, and its documentation shows no way for an npm package to ship them. A plugin published to npm can inject skills through OpenCode's plugin API, but this template does not generate one. See `docs/research/opencode-npm-skills.md` in the template repository for the evidence and what is still unverified.
 
 ## Antigravity
 

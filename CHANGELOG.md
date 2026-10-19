@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/hasansezertasan/homebrew-tap-skills/compare/homebrew-tap-skills-v0.1.0...homebrew-tap-skills-v0.2.0) (2026-10-19)
+
+
+### Features
+
+* add homebrew-producer-dispatch skill ([#19](https://github.com/hasansezertasan/homebrew-tap-skills/issues/19)) ([7f4449a](https://github.com/hasansezertasan/homebrew-tap-skills/commit/7f4449a6840e3971ed2588cc26953ca5e7ba8809)), closes [#18](https://github.com/hasansezertasan/homebrew-tap-skills/issues/18)
+
 ## 0.1.0 (2026-10-17)
 
 

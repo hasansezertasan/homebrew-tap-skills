@@ -1,25 +1,25 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:e2246669110023d8f98306720774b65f4c2f401dd6e65a64755042eaba9a9e42",
+  "source_hash": "blake3:01a17eda7dbbfd8c732e9d271f3dfbd3af7a374e5160d12ba55fd1dc2287d22b",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
       "mode": "0644"
     },
     ".claude-plugin/marketplace.json": {
-      "content_hash": "blake3:cf5637a0a13951d84be9e4a7528b0b249014c1c9670b1063def8135c7e11d8c5",
+      "content_hash": "blake3:b2227b2cd232c204939bed39f4057b8a5adb069e76d4626b08ee8725ecf6d2b5",
       "mode": "0644"
     },
     ".claude-plugin/plugin.json": {
-      "content_hash": "blake3:cf2468f897b7dcbf13ac8b5ff527c094c51f12f73e986f965ca976e823459958",
+      "content_hash": "blake3:17ab713e82cd79e069d5568d5ac60e6f58a867f4704ef1b2cb3ab05a8b449624",
       "mode": "0644"
     },
     ".codex-plugin/plugin.json": {
-      "content_hash": "blake3:17d9c57c48e6e2d769d01b763f2539410d7c171a77c124d36de7440f3aa9c8b5",
+      "content_hash": "blake3:0494db04b06b63e5533b372cfb7e15fe458ed86af80d713c7e22d171d71d0136",
       "mode": "0644"
     },
     "package.json": {
-      "content_hash": "blake3:cf3e34e5d5d8063a7746fa72192fb1cb1d9d078fd925e8e3a65df2a5f026f921",
+      "content_hash": "blake3:570ca574090c9a00b52f08b77d9fe9b8851ce4fc0c6a9dadd36c9bb2da3ddbee",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {

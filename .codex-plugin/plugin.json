@@ -1,6 +1,6 @@
 {
   "name": "homebrew-tap-skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skills for operating a Homebrew tap: set it up, then add, fix, triage, remove, and verify formulae and casks.",
   "author": {
     "name": "Hasan Sezer Tasan",

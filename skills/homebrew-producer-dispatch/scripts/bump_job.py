@@ -10,7 +10,9 @@ import sys
 _NAME = re.compile(r"[a-z0-9][a-z0-9._+@-]*")
 _TAP = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
 _JOB_ID = re.compile(r"[A-Za-z_][A-Za-z0-9_-]*")
+_SECRET = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _KINDS = ("formula", "cask")
+DEFAULT_SECRET = "HOMEBREW_TAP_TOKEN"
 
 _JOB = """\
   bump-homebrew:
@@ -25,10 +27,10 @@ _JOB = """\
         env:
           # PAT with Contents: write on the tap repo (NOT the repo GITHUB_TOKEN,
           # which cannot POST a cross-repo dispatch). Absent → skip, never fail.
-          GH_TOKEN: ${{{{ secrets.HOMEBREW_TAP_TOKEN }}}}
+          GH_TOKEN: ${{{{ secrets.{secret} }}}}
 {version_env}        run: |
           if [ -z "${{GH_TOKEN:-}}" ]; then
-            echo "::warning::HOMEBREW_TAP_TOKEN not set; skipping Homebrew bump"
+            echo "::warning::{secret} not set; skipping Homebrew bump"
             exit 0
           fi
           echo "Dispatching update-{kind} for {name}{version_echo}"
@@ -50,6 +52,7 @@ def render(
     needs: list[str],
     gate: str,
     version_expr: str | None,
+    secret: str = DEFAULT_SECRET,
 ) -> str:
     """Return the job text, indented to sit under a workflow's ``jobs:`` key."""
     if kind not in _KINDS:
@@ -58,20 +61,27 @@ def render(
         raise ValueError(f"invalid {kind} name: {name!r}")
     if not _TAP.fullmatch(tap):
         raise ValueError(f"tap must be owner/repo, not {tap!r}")
+    if not _SECRET.fullmatch(secret):
+        raise ValueError(f"secret must be a GitHub secret name, not {secret!r}")
     if not needs or not all(_JOB_ID.fullmatch(job) for job in needs):
         raise ValueError(f"needs must be one or more job ids, not {needs!r}")
-    for field, value in (("gate", gate), ("version_expr", "-" if version_expr is None else version_expr)):
+    expressions = {"gate": gate}
+    if version_expr is not None:
+        expressions["version_expr"] = version_expr
+    for field, value in expressions.items():
         if not value.strip() or "\n" in value or "{{" in value or "}}" in value:
             raise ValueError(f"{field} must be one expression without braces: {value!r}")
+    with_version = version_expr is not None
     return _JOB.format(
         kind=kind,
         name=name,
         tap=tap,
+        secret=secret,
         needs=", ".join(needs),
         gate=gate,
-        version_env=_VERSION_ENV.format(expr=version_expr) if version_expr is not None else "",
-        version_echo=" $VERSION" if version_expr is not None else "",
-        version_field=_VERSION_FIELD if version_expr is not None else "",
+        version_env=_VERSION_ENV.format(expr=version_expr) if with_version else "",
+        version_echo=" $VERSION" if with_version else "",
+        version_field=_VERSION_FIELD if with_version else "",
     )
 
 
@@ -82,6 +92,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tap", required=True, help="the tap repository, owner/homebrew-<tap>")
     parser.add_argument("--needs", required=True, help="comma-separated release job ids")
     parser.add_argument("--gate", required=True, help="the job's `if` expression, without ${{ }}")
+    parser.add_argument(
+        "--secret",
+        default=DEFAULT_SECRET,
+        help=f"the producer's Actions secret holding the tap token (default {DEFAULT_SECRET})",
+    )
     parser.add_argument(
         "--version-expr",
         help="expression holding the released version; omit to leave `version` out of the payload",
@@ -96,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
                 needs=[job.strip() for job in args.needs.split(",")],
                 gate=args.gate,
                 version_expr=args.version_expr,
+                secret=args.secret,
             )
         )
     except ValueError as error:

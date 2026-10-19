@@ -26,9 +26,15 @@ in the repository that ships this skill.
 
 ## Known limits
 
-- `classify_producer.py` finds the job by its name (`bump-homebrew`) and a dispatch
-  by `repos/<tap>/dispatches` or a `repository: <tap>` line. A workflow that builds
-  the repository name from variables is not recognised and classifies as `none`.
+- `classify_producer.py` finds the job by its name (`bump-homebrew`, at any indent)
+  and a dispatch by `repos/<tap>/dispatches`, or a `repository: <tap>` line in a
+  workflow that uses `repository-dispatch`. A workflow that builds the repository
+  name from variables is not recognised and classifies as `none`.
+- It does not check the job's event type, so a producer's formula job and a wanted
+  cask job are the same collision; there is one `bump-homebrew` job per producer.
+- `bump_job.py` hardcodes the receivers' event types, payload keys and name pattern,
+  as the scaffolders hardcode their own options; the skill checks its output against
+  the receivers.
 - The script cannot tell whether a producer's release workflow is still shaped as
   the user described; the user supplies the job ids and expressions.
 - If `copier-pyproject` changes its job, this skill's job has to change with it;

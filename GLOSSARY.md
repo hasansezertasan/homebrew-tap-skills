@@ -9,7 +9,7 @@ A GitHub repository named `homebrew-<tap>` that holds formulae and casks, made f
 _Avoid_: Bucket, repo (unqualified)
 
 **Producer**:
-The repository that builds and releases a package a tap distributes. It signals the tap after a release and never edits the tap.
+The repository that builds and releases a package a tap distributes.
 _Avoid_: Source repo, package repo, upstream
 
 **Receiver**:
@@ -21,9 +21,9 @@ The cross-repository signal a producer sends to its tap's receiver after a relea
 _Avoid_: Trigger, webhook, ping
 
 **Bump job**:
-The `bump-homebrew` job in a producer's release workflow that sends the dispatch. It is the standard shape, and a producer rendered from `copier-pyproject` gets it from the template.
+The `bump-homebrew` job in a producer's release workflow that sends the dispatch.
 _Avoid_: Dispatch workflow, release hook
 
 **Tap token**:
-The producer's `HOMEBREW_TAP_TOKEN` secret: a credential scoped to the tap with Contents: write, used only to send the dispatch.
+The producer's `HOMEBREW_TAP_TOKEN` secret: a credential scoped to the tap with Contents: write.
 _Avoid_: PAT, `WORKFLOW_TOKEN` (a different, tap-side secret)

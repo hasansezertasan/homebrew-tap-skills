@@ -83,6 +83,31 @@ class ClassifyTest(unittest.TestCase):
         with producer(files) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
 
+    def test_the_job_may_be_indented_differently(self) -> None:
+        head, jobs = STANDARD_RELEASE.split("jobs:\n")
+        body = head + "jobs:\n" + "".join(f"  {line}" for line in jobs.splitlines(keepends=True))
+        with producer({".github/workflows/release.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
+
+    def test_the_standard_job_for_another_tap_is_not_wired_to_this_one(self) -> None:
+        body = STANDARD_RELEASE.replace("hasansezertasan/homebrew-tap", "acme/homebrew-tools")
+        with producer({".github/workflows/release.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "other-tap-job")
+
+    def test_a_second_dispatch_beside_the_standard_job_is_a_duplicate(self) -> None:
+        ship = "jobs:\n  notify:\n    steps:\n      - run: gh api repos/hasansezertasan/homebrew-tap/dispatches\n"
+        files = {".github/workflows/release.yml": STANDARD_RELEASE, ".github/workflows/ship.yml": ship}
+        with producer(files) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "duplicate-dispatch")
+
+    def test_checking_out_the_tap_is_not_a_dispatch(self) -> None:
+        body = (
+            "jobs:\n  docs:\n    steps:\n      - uses: actions/checkout@v4\n"
+            "        with:\n          repository: hasansezertasan/homebrew-tap\n"
+        )
+        with producer({".github/workflows/docs.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:

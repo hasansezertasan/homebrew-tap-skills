@@ -27,7 +27,9 @@ it is not updated as the project evolves.
   `release.yml` from the template (`include_homebrew`), whose answers file says
   never to edit it by hand. The skill proposes enabling `include_homebrew`
   through `copier update`; it edits `release.yml` directly only when there is no
-  such answers file.
+  `copier-pyproject` answers file. One `bump-homebrew` job exists per producer, so a
+  producer that already has one, aimed at this tap or another, is reported and left
+  alone.
 - **The skill never creates the token.** `HOMEBREW_TAP_TOKEN` is the default
   secret name and can be overridden. Its scope is the tap only, Contents: write.
   The skill checks the secret exists with `gh secret list`, states the scope in

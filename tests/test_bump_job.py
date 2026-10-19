@@ -44,6 +44,35 @@ HWID_FORMULA_JOB = """\
             -f "client_payload[version]=$VERSION"
 """
 
+# The job as keycast's release.yml carries it: a cask, with a prerelease condition.
+KEYCAST_CASK_JOB = """\
+  bump-homebrew:
+    name: Bump Homebrew cask
+    needs: [release-please, finalize-release]
+    if: ${{ needs.release-please.outputs.release_created == 'true' && needs.release-please.outputs.is_prerelease != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - name: Dispatch the tap update
+        env:
+          # PAT with Contents: write on the tap repo (NOT the repo GITHUB_TOKEN,
+          # which cannot POST a cross-repo dispatch). Absent → skip, never fail.
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ needs.release-please.outputs.version }}
+        run: |
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::warning::HOMEBREW_TAP_TOKEN not set; skipping Homebrew bump"
+            exit 0
+          fi
+          echo "Dispatching update-cask for keycast $VERSION"
+          gh api repos/hasansezertasan/homebrew-tap/dispatches \\
+            --method POST \\
+            -f event_type=update-cask \\
+            -f 'client_payload[cask]=keycast' \\
+            -f "client_payload[version]=$VERSION"
+"""
+
 
 class RenderTest(unittest.TestCase):
     def test_formula_matches_the_standard_job(self) -> None:
@@ -59,7 +88,7 @@ class RenderTest(unittest.TestCase):
 
 
 class KindAndVersionTest(unittest.TestCase):
-    def test_cask_with_keycasts_prerelease_gate(self) -> None:
+    def test_cask_matches_the_standard_job(self) -> None:
         job = bump_job.render(
             kind="cask",
             name="keycast",
@@ -71,15 +100,21 @@ class KindAndVersionTest(unittest.TestCase):
             ),
             version_expr="needs.release-please.outputs.version",
         )
-        self.assertIn("name: Bump Homebrew cask\n", job)
-        self.assertIn(
-            "if: ${{ needs.release-please.outputs.release_created == 'true' && "
-            "needs.release-please.outputs.is_prerelease != 'true' }}\n",
-            job,
+        self.assertEqual(job, KEYCAST_CASK_JOB)
+
+    def test_a_named_secret_replaces_the_default_everywhere(self) -> None:
+        job = bump_job.render(
+            kind="formula",
+            name="hwid",
+            tap="hasansezertasan/homebrew-tap",
+            needs=["publish"],
+            gate="true",
+            version_expr=None,
+            secret="ACME_TAP_PAT",
         )
-        self.assertIn("-f event_type=update-cask \\\n", job)
-        self.assertIn("-f 'client_payload[cask]=keycast' \\\n", job)
-        self.assertNotIn("client_payload[formula]", job)
+        self.assertIn("GH_TOKEN: ${{ secrets.ACME_TAP_PAT }}", job)
+        self.assertIn("ACME_TAP_PAT not set; skipping Homebrew bump", job)
+        self.assertNotIn("HOMEBREW_TAP_TOKEN", job)
 
     def test_without_a_version_the_payload_carries_only_the_name(self) -> None:
         job = bump_job.render(
@@ -117,6 +152,11 @@ class ValidationTest(unittest.TestCase):
             with self.subTest(tap=tap), self.assertRaises(ValueError):
                 self.render(tap=tap)
 
+    def test_rejects_a_secret_name_github_would_not_accept(self) -> None:
+        for secret in ("", "1TOKEN", "GITHUB_TOKEN2 x", "tok}}", "A\nB"):
+            with self.subTest(secret=secret), self.assertRaises(ValueError):
+                self.render(secret=secret)
+
     def test_rejects_unknown_kind_and_bad_job_ids(self) -> None:
         with self.assertRaises(ValueError):
             self.render(kind="bottle")
@@ -151,6 +191,12 @@ class MainTest(unittest.TestCase):
             )
         self.assertEqual(code, 0)
         self.assertEqual(out.getvalue(), HWID_FORMULA_JOB)
+
+    def test_secret_option_is_passed_through(self) -> None:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            bump_job.main(["cask", "keycast", "--tap", "a/b", "--needs", "x", "--gate", "true", "--secret", "ACME_PAT"])
+        self.assertIn("secrets.ACME_PAT", out.getvalue())
 
     def test_exits_with_the_reason_for_an_invalid_name(self) -> None:
         with self.assertRaises(SystemExit) as raised:

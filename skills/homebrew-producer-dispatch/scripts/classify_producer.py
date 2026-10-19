@@ -31,17 +31,34 @@ def _split_bump_job(text: str) -> tuple[str | None, str]:
     return None, text
 
 
+def _dispatch_steps(text: str) -> list[str]:
+    """Return the block of each ``repository-dispatch`` action step in ``text``."""
+    lines = text.splitlines(keepends=True)
+    blocks = []
+    for start, line in enumerate(lines):
+        match = re.search(r"uses:\s*\S*repository-dispatch", line)
+        if not match:
+            continue
+        indent = line.index("uses:")
+        end = start + 1
+        while end < len(lines) and (
+            not lines[end].strip()
+            or lines[end].lstrip().startswith("#")
+            or len(lines[end]) - len(lines[end].lstrip()) >= indent
+        ):
+            end += 1
+        blocks.append("".join(lines[start:end]))
+    return blocks
+
+
 def _dispatches_to(text: str, tap: str) -> bool:
     """True when ``text`` posts a dispatch to ``tap`` by ``gh api`` or by action."""
     escaped = re.escape(tap)
-    return bool(
-        re.search(rf"repos/{escaped}/dispatches", text, re.IGNORECASE)
-        or (
-            "repository-dispatch" in text
-            and re.search(
-                rf"repository:\s*['\"]?{escaped}['\"]?\s*$", text, re.MULTILINE | re.IGNORECASE
-            )
-        )
+    if re.search(rf"repos/{escaped}/dispatches", text, re.IGNORECASE):
+        return True
+    pattern = rf"repository:\s*['\"]?{escaped}['\"]?\s*$"
+    return any(
+        re.search(pattern, step, re.MULTILINE | re.IGNORECASE) for step in _dispatch_steps(text)
     )
 
 

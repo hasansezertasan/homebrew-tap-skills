@@ -36,10 +36,12 @@ receiver rejects a name it cannot find, so stop and hand the user to
 ## Look at the producer
 
 Clone the producer into a fresh temporary directory and read its workflows there;
-do not use the GitHub API or web pages to discover its files. Classify it:
+do not use the GitHub API or web pages to discover its files. Classify it. Both
+scripts ship in this skill's directory (`<skill-dir>`), not in the tap, so run
+them from there:
 
 ```sh
-python scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REPO"
+python3 <skill-dir>/scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REPO"
 ```
 
 | Result | Meaning | Action |
@@ -70,7 +72,7 @@ read from the tap above; it ships here, like the scaffolders, so check its outpu
 against the receivers rather than trusting either blindly.
 
 ```sh
-python scripts/bump_job.py formula hwid --tap "$TAP_REPO" \
+python3 <skill-dir>/scripts/bump_job.py formula hwid --tap "$TAP_REPO" \
   --needs release-please,finalize-release \
   --gate "needs.release-please.outputs.release_created == 'true'" \
   --version-expr "needs.release-please.outputs.version"

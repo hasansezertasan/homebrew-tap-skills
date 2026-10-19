@@ -128,6 +128,28 @@ class ClassifyTest(unittest.TestCase):
         with producer({".copier-answers.yml": answers}) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
 
+    def test_dispatching_elsewhere_while_checking_out_this_tap_is_not_a_dispatch_to_it(self) -> None:
+        body = (
+            "jobs:\n  ship:\n    steps:\n"
+            "      - uses: actions/checkout@v4\n"
+            "        with:\n          repository: hasansezertasan/homebrew-tap\n"
+            "      - uses: peter-evans/repository-dispatch@v3\n"
+            "        with:\n          repository: acme/homebrew-tools\n"
+        )
+        with producer({".github/workflows/ship.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
+
+    def test_the_dispatch_step_may_start_with_its_name(self) -> None:
+        body = (
+            "jobs:\n  ship:\n    steps:\n"
+            "      - name: Tell the tap\n"
+            "        uses: peter-evans/repository-dispatch@v3\n"
+            "        with:\n          repository: hasansezertasan/homebrew-tap\n"
+            "      - run: echo done\n"
+        )
+        with producer({".github/workflows/ship.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "other-dispatch")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:

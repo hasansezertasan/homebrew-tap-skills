@@ -153,7 +153,7 @@ class ValidationTest(unittest.TestCase):
                 self.render(tap=tap)
 
     def test_rejects_a_secret_name_github_would_not_accept(self) -> None:
-        for secret in ("", "1TOKEN", "GITHUB_TOKEN2 x", "tok}}", "A\nB"):
+        for secret in ("", "1TOKEN", "GITHUB_TOKEN2 x", "tok}}", "A\nB", "GITHUB_TAP_TOKEN", "github_pat"):
             with self.subTest(secret=secret), self.assertRaises(ValueError):
                 self.render(secret=secret)
 

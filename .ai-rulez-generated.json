@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:6ccc740297f6db86f3888caf0263589dce9bd4e34ff7d6667201d96d80ad9a0c",
+  "source_hash": "blake3:8b5680340a412bf5126b6db6c9329585ed60fbe356de0ca0685f6566022a28cf",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -91,11 +91,11 @@
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/scripts/bump_job.py": {
-      "content_hash": "blake3:92e35b789669f14dc3de8dda882f48e8d11ed0ac03b6f9a1f646efd715cd6027",
+      "content_hash": "blake3:a6ecd59be2e6f91def4de2b6e029328f4237acc1510c97148dde5c7dc6ced35a",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/scripts/classify_producer.py": {
-      "content_hash": "blake3:5fa6a707a24bce666f27daf38132d52ad2b0e17e98c8d9d995d6fc2d6161e94c",
+      "content_hash": "blake3:60008c693e6ef0372398d28e3e01923c64f21e91e373dc0a79dacc9d3fd93016",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {

@@ -60,8 +60,8 @@ def render(
         raise ValueError(f"invalid {kind} name: {name!r}")
     if not _TAP.fullmatch(tap):
         raise ValueError(f"tap must be owner/repo, not {tap!r}")
-    if not _SECRET.fullmatch(secret):
-        raise ValueError(f"secret must be a GitHub secret name, not {secret!r}")
+    if not _SECRET.fullmatch(secret) or secret.upper().startswith("GITHUB_"):
+        raise ValueError(f"secret must be a secret name not starting with GITHUB_, not {secret!r}")
     if not needs or not all(_JOB_ID.fullmatch(job) for job in needs):
         raise ValueError(f"needs must be one or more job ids, not {needs!r}")
     expressions = {"gate": gate}

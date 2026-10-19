@@ -8,8 +8,15 @@ import sys
 from pathlib import Path
 
 
+def _without_comments(text: str) -> str:
+    """Drop whole-line comments, so a retired command left in one is not a dispatch."""
+    lines = text.splitlines(keepends=True)
+    return "".join(line for line in lines if not line.lstrip().startswith("#"))
+
+
 def _workflows(root: Path) -> list[str]:
-    return [path.read_text() for path in sorted((root / ".github/workflows").glob("*.y*ml"))]
+    paths = sorted((root / ".github/workflows").glob("*.y*ml"))
+    return [_without_comments(path.read_text()) for path in paths]
 
 
 def _split_bump_job(text: str) -> tuple[str | None, str]:

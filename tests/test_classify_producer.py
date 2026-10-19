@@ -187,6 +187,20 @@ class ClassifyTest(unittest.TestCase):
         with producer(files) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "duplicate-dispatch")
 
+    def test_a_commented_out_dispatch_is_not_a_dispatch(self) -> None:
+        body = (
+            "jobs:\n  ship:\n    steps:\n"
+            "      # - run: gh api repos/hasansezertasan/homebrew-tap/dispatches\n"
+            "      - run: |\n"
+            "          # gh api repos/hasansezertasan/homebrew-tap/dispatches\n"
+            "          echo done\n"
+            "      # - uses: peter-evans/repository-dispatch@v3\n"
+            "      #   with:\n"
+            "      #     repository: hasansezertasan/homebrew-tap\n"
+        )
+        with producer({".github/workflows/ship.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:

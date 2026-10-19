@@ -37,3 +37,8 @@ evidence from the relevant guide.
 - **Adoption of existing taps.** `homebrew-tap-setup` describes adopting the
   template in a tap that has no `.copier-answers.yml`; that path has not been
   exercised on a real tap.
+- **Producer dispatch.** `homebrew-producer-dispatch` renders the same
+  `bump-homebrew` job `hwid` and `keycast` carry, and its scripts are unit tested,
+  but no producer release has fired a dispatch it produced and no producer pull
+  request has been opened with it. Its eval cases are desk exercises that have not
+  been run through `ai-rulez eval run`.

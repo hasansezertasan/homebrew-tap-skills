@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:228fb8bb4cd3abf8d0fddc194b8e36bd228e3b38919dc3426f2ceee49a5310b8",
+  "source_hash": "blake3:dd704a758eeda0ac4cc9ce0153301058f8568c7c4187dc8449fcf6ea9b3d4bae",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -19,7 +19,7 @@
       "mode": "0644"
     },
     "package.json": {
-      "content_hash": "blake3:70b018ec13e4368d1db406a94e30220c92fe4b5b8fd5bcf309abd2161d2a394e",
+      "content_hash": "blake3:cf3e34e5d5d8063a7746fa72192fb1cb1d9d078fd925e8e3a65df2a5f026f921",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
@@ -66,6 +66,38 @@
       "content_hash": "blake3:e4d9cfd9e4997d693d749597df6a768592fd98705f31572510fb871ccee62645",
       "mode": "0644"
     },
+    "skills/homebrew-producer-dispatch/SKILL.md": {
+      "content_hash": "blake3:0951e2addfbb05a7deb1540c28d1af1e811cb1864189265d99d968b61f4a66bc",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/agents/openai.yaml": {
+      "content_hash": "blake3:d27e4678f537e8b4f509cffd0dbc15f1e15371a2c6fac5a800dffc3505a6a76b",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/index.md": {
+      "content_hash": "blake3:016a2c3ef09e5af53357b26c1aae6178b8981c120d4d17724663a8a0e6f32466",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/references/contract.md": {
+      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/references/dispatch-cases.md": {
+      "content_hash": "blake3:72a40475bec05e9078bb758610d37f4f3df1c8fc248c9240280e24db8314035d",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/references/dispatch-report.md": {
+      "content_hash": "blake3:431e361fa9d386637b5baae0985c17d1b76c2df35219113c93f34d46436e7e45",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/scripts/bump_job.py": {
+      "content_hash": "blake3:1a66aa3ae7bbc4197602e6e6fd52d9cbf6a5d1c63f7d3ad9b8a861460e71870c",
+      "mode": "0644"
+    },
+    "skills/homebrew-producer-dispatch/scripts/classify_producer.py": {
+      "content_hash": "blake3:f72991b77642211cc0719a0bd14d26dbc1c695f0a7984bb9b22d785691bf7263",
+      "mode": "0644"
+    },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {
       "content_hash": "blake3:c7fb18bbc2f1c2b4e2c310f69095688ed19b4f877a7631d56c795b08f2f9ab10",
       "mode": "0644"
@@ -87,7 +119,7 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/SKILL.md": {
-      "content_hash": "blake3:2596303c4e1472a9f4f26601daa5934a6cf8841a22b56685612638fe0505a2ee",
+      "content_hash": "blake3:599f661e6cc49ad9cec4d7b336b147a221048c6d7a28ed7514bc00f546d0b0fb",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/agents/openai.yaml": {

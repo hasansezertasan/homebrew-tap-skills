@@ -1,0 +1,5 @@
+---
+interface:
+  display_name: "Wire a Producer to the Tap"
+  short_description: "Open a PR so a package's releases update this Homebrew tap"
+  default_prompt: "Use $homebrew-producer-dispatch to make releases of a package dispatch updates to this tap."

@@ -168,6 +168,25 @@ class ClassifyTest(unittest.TestCase):
         with producer({".github/workflows/release.yml": STANDARD_RELEASE}) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
 
+    def test_an_action_based_job_declares_its_kind_with_event_type(self) -> None:
+        body = (
+            "jobs:\n  bump-homebrew:\n    steps:\n"
+            "      - uses: peter-evans/repository-dispatch@v3\n"
+            "        with:\n          repository: hasansezertasan/homebrew-tap\n"
+            "          event-type: update-formula\n"
+        )
+        with producer({".github/workflows/release.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP, kind="formula"), "standard-job")
+            self.assertEqual(classify_producer.classify(Path(root), TAP, kind="cask"), "other-kind-job")
+
+    def test_two_wired_jobs_in_different_files_are_duplicates(self) -> None:
+        files = {
+            ".github/workflows/release.yml": STANDARD_RELEASE,
+            ".github/workflows/republish.yml": STANDARD_RELEASE,
+        }
+        with producer(files) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "duplicate-dispatch")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:

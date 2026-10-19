@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:2ccc5022da54a2fa4b0cc419a166d98b803b88532bb39c0eca055a853399a08d",
+  "source_hash": "blake3:6ccc740297f6db86f3888caf0263589dce9bd4e34ff7d6667201d96d80ad9a0c",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -95,7 +95,7 @@
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/scripts/classify_producer.py": {
-      "content_hash": "blake3:3deb810b80b9294209ccdb5d9840bcccad342de49b7fe7cccb833772187c1e10",
+      "content_hash": "blake3:5fa6a707a24bce666f27daf38132d52ad2b0e17e98c8d9d995d6fc2d6161e94c",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/SKILL.md": {

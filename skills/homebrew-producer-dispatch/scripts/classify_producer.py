@@ -74,7 +74,7 @@ def classify(root: Path, tap: str, kind: str | None = None) -> str:
     - ``standard-job``: a ``bump-homebrew`` job dispatches to ``tap``, and nothing else does.
     - ``other-kind-job``: that job dispatches the other kind than ``kind`` (``formula`` or
       ``cask``), so the job id is taken. Without ``kind`` the event type is not compared.
-    - ``duplicate-dispatch``: that job exists and another workflow also dispatches to ``tap``.
+    - ``duplicate-dispatch``: more than one workflow job or step dispatches to ``tap``.
     - ``other-tap-job``: a ``bump-homebrew`` job exists but dispatches elsewhere, so the
       job id is taken.
     - ``other-dispatch``: some other workflow dispatches to ``tap``.
@@ -92,9 +92,9 @@ def classify(root: Path, tap: str, kind: str | None = None) -> str:
     other_dispatch = any(_dispatches_to(text, tap) for text in elsewhere)
     wired = [job for job in jobs if _dispatches_to(job, tap)]
     if wired:
-        if other_dispatch:
+        if other_dispatch or len(wired) > 1:
             return "duplicate-dispatch"
-        if kind and not any(f"event_type=update-{kind}" in job for job in wired):
+        if kind and not re.search(rf"event[_-]type(?:=|:\s*)['\"]?update-{kind}\b", wired[0]):
             return "other-kind-job"
         return "standard-job"
     if jobs:

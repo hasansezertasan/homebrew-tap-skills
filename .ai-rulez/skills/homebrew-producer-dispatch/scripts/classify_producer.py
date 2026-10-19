@@ -56,7 +56,7 @@ def _dispatches_to(text: str, tap: str) -> bool:
     escaped = re.escape(tap)
     if re.search(rf"repos/{escaped}/dispatches", text, re.IGNORECASE):
         return True
-    pattern = rf"repository:\s*['\"]?{escaped}['\"]?\s*$"
+    pattern = rf"repository:\s*['\"]?{escaped}['\"]?\s*(?:#.*)?$"
     return any(
         re.search(pattern, step, re.MULTILINE | re.IGNORECASE) for step in _dispatch_steps(text)
     )
@@ -68,10 +68,12 @@ def _from_copier_pyproject(root: Path) -> bool:
     return answers.is_file() and bool(re.search(pattern, answers.read_text(), re.MULTILINE))
 
 
-def classify(root: Path, tap: str) -> str:
+def classify(root: Path, tap: str, kind: str | None = None) -> str:
     """Return how the producer dispatches to ``tap``.
 
     - ``standard-job``: a ``bump-homebrew`` job dispatches to ``tap``, and nothing else does.
+    - ``other-kind-job``: that job dispatches the other kind than ``kind`` (``formula`` or
+      ``cask``), so the job id is taken. Without ``kind`` the event type is not compared.
     - ``duplicate-dispatch``: that job exists and another workflow also dispatches to ``tap``.
     - ``other-tap-job``: a ``bump-homebrew`` job exists but dispatches elsewhere, so the
       job id is taken.
@@ -88,8 +90,13 @@ def classify(root: Path, tap: str) -> str:
             jobs.append(job)
         elsewhere.append(rest)
     other_dispatch = any(_dispatches_to(text, tap) for text in elsewhere)
-    if any(_dispatches_to(job, tap) for job in jobs):
-        return "duplicate-dispatch" if other_dispatch else "standard-job"
+    wired = [job for job in jobs if _dispatches_to(job, tap)]
+    if wired:
+        if other_dispatch:
+            return "duplicate-dispatch"
+        if kind and not any(f"event_type=update-{kind}" in job for job in wired):
+            return "other-kind-job"
+        return "standard-job"
     if jobs:
         return "other-tap-job"
     if other_dispatch:
@@ -103,8 +110,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("producer", help="a checkout of the producer repository")
     parser.add_argument("--tap", required=True, help="the tap repository, owner/homebrew-<tap>")
+    parser.add_argument("--kind", choices=("formula", "cask"), help="what the user wants wired")
     args = parser.parse_args(argv)
-    print(classify(Path(args.producer), args.tap))
+    print(classify(Path(args.producer), args.tap, args.kind))
     return 0
 
 

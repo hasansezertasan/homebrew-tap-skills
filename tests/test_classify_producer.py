@@ -150,6 +150,24 @@ class ClassifyTest(unittest.TestCase):
         with producer({".github/workflows/ship.yml": body}) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "other-dispatch")
 
+    def test_an_inline_comment_after_the_repository_value(self) -> None:
+        body = (
+            "jobs:\n  ship:\n    steps:\n"
+            "      - uses: peter-evans/repository-dispatch@v3\n"
+            "        with:\n          repository: hasansezertasan/homebrew-tap # release bump\n"
+        )
+        with producer({".github/workflows/ship.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "other-dispatch")
+
+    def test_the_standard_job_for_the_other_kind_is_a_collision(self) -> None:
+        with producer({".github/workflows/release.yml": STANDARD_RELEASE}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP, kind="formula"), "standard-job")
+            self.assertEqual(classify_producer.classify(Path(root), TAP, kind="cask"), "other-kind-job")
+
+    def test_without_a_kind_any_standard_job_counts(self) -> None:
+        with producer({".github/workflows/release.yml": STANDARD_RELEASE}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:
@@ -159,6 +177,13 @@ class MainTest(unittest.TestCase):
                 code = classify_producer.main([root, "--tap", TAP])
         self.assertEqual(code, 0)
         self.assertEqual(out.getvalue(), "standard-job\n")
+
+    def test_the_kind_option_is_passed_through(self) -> None:
+        out = io.StringIO()
+        with producer({".github/workflows/release.yml": STANDARD_RELEASE}) as root:
+            with contextlib.redirect_stdout(out):
+                classify_producer.main([root, "--tap", TAP, "--kind", "cask"])
+        self.assertEqual(out.getvalue(), "other-kind-job\n")
 
 
 if __name__ == "__main__":

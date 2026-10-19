@@ -21,11 +21,14 @@ short `owner/<tap>` name that `homebrew-add`'s `scripts/tap_name.py` prints.
 Ask the user for these first; infer none of them, and do not assume PyPI:
 
 - the producer's GitHub URL;
-- the package's registry name, and whether it ships as a formula or a cask.
+- whether it ships as a formula or a cask, and its token in this tap, which can
+  differ from the package's registry name;
+- the package's registry name, for the pull request text only.
 
-Check the name exists in this tap: `Formula/<name>.rb` or `Casks/<name>.rb`. The
-receiver rejects a name it cannot find, so stop and hand the user to
-`homebrew-add` if it is missing.
+Check the token exists in this tap: `Formula/<token>.rb` or `Casks/<token>.rb`.
+The receiver rejects a name it cannot find, so stop and hand the user to
+`homebrew-add` if it is missing. Use the token, not the registry name, everywhere
+the dispatch names the package.
 
 ## Look at the producer
 
@@ -35,12 +38,13 @@ scripts ship in this skill's directory (`<skill-dir>`), not in the tap, so run
 them from there:
 
 ```sh
-python3 <skill-dir>/scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REPO"
+python3 <skill-dir>/scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REPO" --kind formula
 ```
 
 | Result | Meaning | Action |
 | --- | --- | --- |
 | `standard-job` | A workflow already has the `bump-homebrew` job, and it dispatches to this tap. | Report it and stop. Show how it differs from the standard job only if asked; do not rewrite it. |
+| `other-kind-job` | The `bump-homebrew` job dispatches this tap, but for the other kind (a formula job when a cask is wanted, or the reverse). | Report it and stop: the job id is taken, so ask the user how to proceed. |
 | `duplicate-dispatch` | That job exists and another workflow also dispatches to this tap. | Report both and stop: each dispatch opens its own tap PR. Remove one only when the user asks. |
 | `other-tap-job` | A `bump-homebrew` job exists but dispatches to a different tap. | Report it and stop: the job id is taken, so a second job of that name would collide. Ask the user how to proceed. |
 | `other-dispatch` | A different workflow dispatches to this tap. | Report which workflow and stop. Change or replace it only when the user asks, and never add a second dispatch beside it. |
@@ -48,7 +52,8 @@ python3 <skill-dir>/scripts/classify_producer.py "$PRODUCER_DIR" --tap "$TAP_REP
 | `none` | No dispatch, and no `copier-pyproject` answers file. | Ask the remaining questions and add the standard job to the release workflow the user named. |
 
 A producer can carry one `bump-homebrew` job, so a producer that ships both a
-formula and a cask needs a decision from the user, not a second job.
+formula and a cask needs a decision from the user, not a second job. Pass `--kind
+cask` for a cask.
 
 ## The standard job
 

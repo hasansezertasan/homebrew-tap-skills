@@ -8,7 +8,7 @@
       "expect_trigger": true,
       "rubric_items": [
         {
-          "text": "Asks the user for the producer URL, the registry name, formula or cask, the job ids to wait on, the release-created condition and the version expression instead of inferring them or assuming PyPI."
+          "text": "Asks the user for the producer URL, whether it is a formula or a cask and its token in this tap, and the registry name instead of inferring them or assuming PyPI, and does not ask for job ids, a release condition or a version expression because the template renders the job."
         },
         {
           "text": "Classifies the producer (classify_producer.py) as template-owned and proposes enabling include_homebrew through copier update rather than hand-editing release.yml."

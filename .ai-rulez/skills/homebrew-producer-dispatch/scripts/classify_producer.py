@@ -22,7 +22,9 @@ def _split_bump_job(text: str) -> tuple[str | None, str]:
         indent = len(match.group(1))
         end = start + 1
         while end < len(lines) and (
-            not lines[end].strip() or len(lines[end]) - len(lines[end].lstrip()) > indent
+            not lines[end].strip()
+            or lines[end].lstrip().startswith("#")
+            or len(lines[end]) - len(lines[end].lstrip()) > indent
         ):
             end += 1
         return "".join(lines[start:end]), "".join(lines[:start] + lines[end:])
@@ -33,17 +35,19 @@ def _dispatches_to(text: str, tap: str) -> bool:
     """True when ``text`` posts a dispatch to ``tap`` by ``gh api`` or by action."""
     escaped = re.escape(tap)
     return bool(
-        re.search(rf"repos/{escaped}/dispatches", text)
+        re.search(rf"repos/{escaped}/dispatches", text, re.IGNORECASE)
         or (
             "repository-dispatch" in text
-            and re.search(rf"repository:\s*['\"]?{escaped}['\"]?\s*$", text, re.MULTILINE)
+            and re.search(
+                rf"repository:\s*['\"]?{escaped}['\"]?\s*$", text, re.MULTILINE | re.IGNORECASE
+            )
         )
     )
 
 
 def _from_copier_pyproject(root: Path) -> bool:
     answers = root / ".copier-answers.yml"
-    pattern = r"^_src_path:\s*\S*copier-pyproject(?:\.git)?\s*$"
+    pattern = r"""^_src_path:\s*["']?(?:[^\s"']*[/:])?copier-pyproject(?:\.git)?["']?\s*$"""
     return answers.is_file() and bool(re.search(pattern, answers.read_text(), re.MULTILINE))
 
 

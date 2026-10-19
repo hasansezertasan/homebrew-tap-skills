@@ -166,7 +166,7 @@ class ValidationTest(unittest.TestCase):
 
     def test_rejects_expressions_that_could_leave_the_expression(self) -> None:
         for field in ("gate", "version_expr"):
-            for value in ("a }} b", "a\nb", ""):
+            for value in ("a }} b", "a\nb", "", "a == 'x' # why", "a ? b: c"):
                 with self.subTest(field=field, value=value), self.assertRaises(ValueError):
                     self.render(**{field: value})
 

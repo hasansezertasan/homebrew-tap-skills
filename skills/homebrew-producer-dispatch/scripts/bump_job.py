@@ -43,7 +43,6 @@ _VERSION_ENV = "          VERSION: ${{{{ {expr} }}}}\n"
 _VERSION_FIELD = ' \\\n            -f "client_payload[version]=$VERSION"'
 
 
-
 def render(
     *,
     kind: str,
@@ -71,6 +70,8 @@ def render(
     for field, value in expressions.items():
         if not value.strip() or "\n" in value or "{{" in value or "}}" in value:
             raise ValueError(f"{field} must be one expression without braces: {value!r}")
+        if " #" in value or ": " in value:
+            raise ValueError(f"{field} must not contain ' #' or ': ', which break YAML: {value!r}")
     with_version = version_expr is not None
     return _JOB.format(
         kind=kind,

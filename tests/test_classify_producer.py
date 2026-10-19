@@ -108,6 +108,26 @@ class ClassifyTest(unittest.TestCase):
         with producer({".github/workflows/docs.yml": body}) as root:
             self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
 
+    def test_a_comment_at_column_zero_does_not_end_the_job(self) -> None:
+        body = STANDARD_RELEASE.replace("    steps:\n", "    steps:\n# note\n")
+        with producer({".github/workflows/release.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
+
+    def test_the_tap_matches_whatever_the_case(self) -> None:
+        body = STANDARD_RELEASE.replace("hasansezertasan/homebrew-tap", "Hasansezertasan/Homebrew-Tap")
+        with producer({".github/workflows/release.yml": body}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "standard-job")
+
+    def test_a_quoted_template_source_is_still_the_template(self) -> None:
+        answers = '_src_path: "https://github.com/hasansezertasan/copier-pyproject.git"\n'
+        with producer({".copier-answers.yml": answers}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "template-owned")
+
+    def test_a_template_that_only_ends_in_the_name_is_not_it(self) -> None:
+        answers = "_src_path: https://github.com/acme/my-copier-pyproject.git\n"
+        with producer({".copier-answers.yml": answers}) as root:
+            self.assertEqual(classify_producer.classify(Path(root), TAP), "none")
+
 
 class MainTest(unittest.TestCase):
     def test_prints_the_classification(self) -> None:

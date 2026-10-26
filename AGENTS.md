@@ -32,8 +32,11 @@ interface live in `.ai-rulez/config.toml`; it has no literal version, which
   event types and payload keys `homebrew-producer-dispatch`'s `bump_job.py`
   writes, are the one exception, because they ship here; check them against the
   tap's receivers.
-- Never scaffold with `brew create`: it writes into homebrew-core. Formulae and
-  casks come from the `homebrew-add` scaffolders.
+- Never run `brew create` without `--tap`: by default it writes into
+  homebrew-core. PyPI formulae and casks come from the `homebrew-add`
+  scaffolders; other source builds use `brew create --tap <owner>/<tap>`, which
+  `homebrew-add` documents. Do not add a scaffolder here for a build system that
+  `brew create` already has a template for.
 - Skills never edit `.gitignore` or other template-managed files by hand.
 - Tap setup renders the Copier template (`homebrew-tap-setup`); it never
   hand-writes template-managed files.

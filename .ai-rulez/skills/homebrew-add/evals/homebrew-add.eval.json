@@ -72,6 +72,55 @@
         "cask",
         "desk-exercise"
       ]
+    },
+    {
+      "id": "brew-create-tap-route",
+      "description": "Route a Go or Rust CLI to brew create --tap and name the checks the skeleton needs.",
+      "prompt": "I want to add 'widget', a Go CLI at owner/widget with GitHub releases, to this tap. Which command do I run and what do I check afterwards? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Runs brew create with --tap <owner>/<tap> and --go (never without --tap, never hand-writes the formula), and does not use add_formula.py or add_cask.py."
+        },
+        {
+          "text": "Treats the output as a skeleton: replaces the placeholder test, sets desc, homepage and license, adds a livecheck block, and removes the generated comment header and Go's deny_network_access!/fetch."
+        },
+        {
+          "text": "Keeps a single top-level url and sha256 so the tap's brew bump-formula-pr update workflow can maintain it."
+        },
+        {
+          "text": "Runs the README catalog regeneration (mise run generate-readme) and hands off to homebrew-verify before a PR."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "brew-create",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "per-platform-binary-route",
+      "description": "Refuse a multi-url formula for per-platform binary archives and choose a bump-compatible route.",
+      "prompt": "The project owner/widget publishes widget-aarch64-apple-darwin.tar.gz, widget-x86_64-apple-darwin.tar.gz, widget-aarch64-unknown-linux-gnu.tar.gz and widget-x86_64-unknown-linux-gnu.tar.gz on GitHub releases and its source is a C program that needs a vendor SDK to build. I want to add it to this tap as a formula with on_macos and on_arm blocks, one url and sha256 per archive. What do you do? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Does not write the per-platform on_macos/on_arm formula, and explains that brew bump-formula-pr only edits a top-level url so the tap's update workflow would skip it and never update it."
+        },
+        {
+          "text": "Proposes a cask with binary, one url template using the architecture, sha256 arm:/intel: and a real livecheck block (not skip), kept flat so brew bump-cask-pr can update it; or a producer-published alternative with its caveats."
+        },
+        {
+          "text": "States that Linux support for casks and Linux hash keys are unverified and need testing before it is claimed."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "per-platform",
+        "desk-exercise"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:01a17eda7dbbfd8c732e9d271f3dfbd3af7a374e5160d12ba55fd1dc2287d22b",
+  "source_hash": "blake3:5fb1ae8e122a4f4625bb737202d8ef4420bc3a4c8c91a4d79b1f23d989551f82",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -23,11 +23,11 @@
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:902c09df068fc649d61029844b98e6015447c3b9e89aa97915170761fc0664ad",
+      "content_hash": "blake3:425ba92d28d0fdd5ee891c1bdf0f9683e2aed6481f41fc9aa5ed11d353477f1b",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {
-      "content_hash": "blake3:c4cc761a84dad542d13ee77470b1a21361dd91890550658049042fb66e0cceb5",
+      "content_hash": "blake3:fbdf98b3bc07908c1c0bbe1d8ab5972d6b5e0abe5ae44432a17ca6b1910c2ef2",
       "mode": "0644"
     },
     "skills/homebrew-add/references/contract.md": {

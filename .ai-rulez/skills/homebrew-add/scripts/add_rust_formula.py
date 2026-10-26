@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import http.client
 import re
 import shutil
 import subprocess
@@ -60,32 +61,81 @@ def sha256_of(url: str) -> str:
 
 def reachable(url: str) -> bool:
     """Whether a homepage answers; ``brew audit --online`` rejects one that does not."""
+    # A repo owner sets `homepage` as free text: restrict to http(s) so `file:` or a
+    # scheme-less value is never "reachable", and treat any malformed one as dead.
+    if not url.lower().startswith(("http://", "https://")):
+        return False
     try:
         with url_fetch.open_url(url, accept="text/html"):
             return True
-    except (urllib.error.URLError, OSError):
+    except (urllib.error.URLError, OSError, ValueError, http.client.HTTPException):
         return False
 
 
-def binary_names(manifest: dict, package_name: str) -> list[str]:
-    """Return the executables a crate builds.
+def implicit_binaries(owner: str, repo: str, tag: str, crate_dir: str,
+                      package_name: str) -> list[str]:
+    """Binaries Cargo discovers without a ``[[bin]]`` table.
 
-    Explicit ``[[bin]]`` tables win; a crate without them builds one binary named
-    after the package (the ``src/main.rs`` default). A workspace root has no
-    ``[package]`` and cannot be installed with a bare ``cargo install``.
+    ``src/main.rs`` builds one named after the package; each ``src/bin/<x>.rs`` or
+    ``src/bin/<x>/main.rs`` builds ``<x>``. Read from the tagged tree, since the
+    manifest alone cannot tell.
     """
-    bins = [b["name"] for b in manifest.get("bin", []) if b.get("name")]
-    return bins or [package_name]
+    base = f"{GITHUB_API}/repos/{owner}/{repo}/contents/"
+    prefix = f"{crate_dir}/" if crate_dir else ""
+
+    def listing(path: str) -> list[dict]:
+        try:
+            result = fetch_json(f"{base}{path}?ref={tag}")
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                return []
+            raise
+        return result if isinstance(result, list) else []
+
+    found = [package_name] if any(
+        e["name"] == "main.rs" for e in listing(f"{prefix}src")) else []
+    for entry in listing(f"{prefix}src/bin"):
+        if entry["type"] == "file" and entry["name"].endswith(".rs"):
+            found.append(entry["name"].removesuffix(".rs"))
+        elif entry["type"] == "dir":
+            found.append(entry["name"])
+    return found
 
 
-def spdx_from_github(meta: dict, manifest: dict) -> str:
+def binary_names(manifest: dict, package_name: str,
+                 implicit: list[str] | None = None) -> list[str]:
+    """Return the executables a crate builds: explicit ``[[bin]]`` plus discovered ones.
+
+    ``implicit`` comes from :func:`implicit_binaries`. With neither, fall back to
+    the package name, the ``src/main.rs`` default.
+    """
+    names = [b["name"] for b in manifest.get("bin", []) if b.get("name")]
+    names += [n for n in (implicit or []) if n not in names]
+    return names or [package_name]
+
+
+def inherited(package: dict, key: str, workspace_package: dict) -> str:
+    """Resolve a package string field, following ``<key>.workspace = true``.
+
+    A workspace member may inherit ``license`` or ``description`` from the root's
+    ``[workspace.package]``; ``tomllib`` then yields ``{"workspace": True}`` rather
+    than a string. Anything that does not resolve to a string is treated as absent.
+    """
+    value = package.get(key)
+    if isinstance(value, dict) and value.get("workspace"):
+        value = workspace_package.get(key)
+    return value.strip() if isinstance(value, str) else ""
+
+
+def spdx_from_github(meta: dict, manifest: dict,
+                     workspace_package: dict | None = None) -> str:
     """Prefer the manifest's SPDX ``license``, then GitHub's detection.
 
     GitHub reports ``NOASSERTION`` for a license it cannot classify; that is not a
     usable value, so the TODO marker (which ``brew audit --strict`` rejects) forces
     a human to set it.
     """
-    declared = (manifest.get("package", {}).get("license") or "").strip()
+    declared = inherited(manifest.get("package", {}), "license", workspace_package or {})
     if declared and is_spdx_expression(declared):
         return declared
     detected = ((meta.get("license") or {}).get("spdx_id") or "").strip()
@@ -107,7 +157,7 @@ def render(name: str, url: str, sha: str, desc: str, homepage: str,
     """Render the Ruby formula source."""
     # Escape for the double-quoted Ruby literal; `#{bin}` interpolation stays live.
     test_command = test_command.replace("\\", "\\\\").replace('"', '\\"')
-    install_args = f', path: "{_rb_str(path)}"' if path else ""
+    cargo_args = f'std_cargo_args(path: "{_rb_str(path)}")' if path else "std_cargo_args"
     return "\n".join([
         f"class {class_name(name)} < Formula",
         f'  desc "{_rb_str(desc)}"',
@@ -124,7 +174,7 @@ def render(name: str, url: str, sha: str, desc: str, homepage: str,
         '  depends_on "rust" => :build',
         "",
         "  def install",
-        f'    system "cargo", "install", *std_cargo_args{install_args}',
+        f'    system "cargo", "install", *{cargo_args}',
         "  end",
         "",
         "  test do",
@@ -215,7 +265,15 @@ def main() -> None:
         sys.exit(f"error: {manifest_path} has no [package] (a workspace root?); "
                  "pass --path to the member crate that builds the CLI")
 
-    binaries = binary_names(manifest, package["name"])
+    # Fetch the workspace root only when a field is inherited from it. A member's
+    # root is the repo's top-level manifest in the common layout.
+    workspace_package: dict = {}
+    if any(isinstance(package.get(k), dict) for k in ("license", "description")):
+        root_manifest = manifest if not args.path else tomllib.loads(fetch_text(
+            f"https://raw.githubusercontent.com/{owner}/{repo}/{tag}/Cargo.toml"))
+        workspace_package = root_manifest.get("workspace", {}).get("package", {})
+    binaries = binary_names(manifest, package["name"], implicit_binaries(
+        owner, repo, tag, (args.path or "").strip("/"), package["name"]))
     name = normalize(args.name or binaries[0])
     if "/" in name or "\\" in name:
         sys.exit(f"error: --name {args.name!r} must not contain path separators")
@@ -232,15 +290,15 @@ def main() -> None:
     # tag is percent-safe for the characters release tooling emits.
     url = f"https://github.com/{owner}/{repo}/archive/refs/tags/{tag}.tar.gz"
     sha = sha256_of(url)
-    desc = clean_desc(package.get("description") or meta.get("description")
-                      or "TODO-set-description")
+    desc = clean_desc(inherited(package, "description", workspace_package)
+                      or meta.get("description") or "TODO-set-description")
     repo_url = meta.get("html_url") or f"https://github.com/{owner}/{repo}"
     homepage = meta.get("homepage") or repo_url
     if homepage != repo_url and not reachable(homepage):
         print(f"warning: homepage {homepage} is not reachable; using {repo_url}",
               file=sys.stderr)
         homepage = repo_url
-    license_id = spdx_from_github(meta, manifest)
+    license_id = spdx_from_github(meta, manifest, workspace_package)
     if len(desc) >= MAX_DESC:
         print(f"warning: desc is {len(desc)} characters; `brew audit --strict` "
               f"requires fewer than {MAX_DESC}. Shorten it by hand",

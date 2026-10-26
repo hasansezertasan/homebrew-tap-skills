@@ -23,6 +23,37 @@ class BinaryNamesTest(unittest.TestCase):
     def test_defaults_to_package_name(self) -> None:
         self.assertEqual(arf.binary_names({}, "pkg"), ["pkg"])
 
+    def test_implicit_binaries_are_merged_without_duplicates(self) -> None:
+        self.assertEqual(
+            arf.binary_names({"bin": [{"name": "a"}]}, "pkg", ["a", "tool"]),
+            ["a", "tool"])
+
+    def test_src_bin_only_crate_has_no_package_named_binary(self) -> None:
+        self.assertEqual(arf.binary_names({}, "pkg", ["x", "y"]), ["x", "y"])
+
+
+class InheritedTest(unittest.TestCase):
+    def test_direct_string(self) -> None:
+        self.assertEqual(arf.inherited({"license": " MIT "}, "license", {}), "MIT")
+
+    def test_workspace_inherited(self) -> None:
+        self.assertEqual(arf.inherited(
+            {"license": {"workspace": True}}, "license", {"license": "MIT"}), "MIT")
+
+    def test_unresolvable_is_empty(self) -> None:
+        self.assertEqual(arf.inherited({"license": {"workspace": True}}, "license", {}), "")
+
+    def test_license_workspace_does_not_crash(self) -> None:
+        self.assertEqual(arf.spdx_from_github(
+            {}, {"package": {"license": {"workspace": True}}}, {"license": "Apache-2.0"}),
+            "Apache-2.0")
+
+
+class ReachableTest(unittest.TestCase):
+    def test_rejects_non_http_schemes(self) -> None:
+        for url in ("example.com", "file:///etc/passwd", "ftp://example.com"):
+            self.assertFalse(arf.reachable(url), url)
+
 
 class LicenseTest(unittest.TestCase):
     def test_manifest_wins(self) -> None:
@@ -58,8 +89,9 @@ class RenderTest(unittest.TestCase):
         self.assertIn("class Amb < Formula", out)
 
     def test_path_for_workspace_member(self) -> None:
-        self.assertIn('*std_cargo_args, path: "crates/cli"',
-                      self.render(path="crates/cli"))
+        out = self.render(path="crates/cli")
+        self.assertIn('*std_cargo_args(path: "crates/cli")', out)
+        self.assertNotIn("*std_cargo_args, path", out)
 
     def test_test_command_keeps_bin_interpolation(self) -> None:
         self.assertIn('shell_output("#{bin}/amb --version")', self.render())

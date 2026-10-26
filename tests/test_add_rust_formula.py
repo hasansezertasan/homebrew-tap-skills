@@ -135,6 +135,50 @@ class ImplicitBinariesTest(unittest.TestCase):
             arf.fetch_json = original
 
 
+class GatedBinaryTest(unittest.TestCase):
+    def test_required_features_reported(self) -> None:
+        manifest = {"bin": [{"name": "a", "required-features": ["cli"]}, {"name": "b"}]}
+        self.assertEqual(arf.gated_binary(manifest, "a"), ["cli"])
+        self.assertEqual(arf.gated_binary(manifest, "b"), [])
+        self.assertEqual(arf.gated_binary({}, "a"), [])
+
+
+class WorkspaceRootTest(unittest.TestCase):
+    def resolve(self, files: dict[str, str], crate_dir: str, package: dict) -> dict:
+        import urllib.error
+
+        def fake(url: str) -> str:
+            path = url.split("/v1/", 1)[1]
+            if path not in files:
+                raise urllib.error.HTTPError(url, 404, "nf", {}, None)
+            return files[path]
+
+        original = arf.fetch_text
+        arf.fetch_text = fake
+        try:
+            return arf.workspace_package_table("o", "r", "v1", crate_dir, package)
+        finally:
+            arf.fetch_text = original
+
+    def test_nested_workspace_root(self) -> None:
+        files = {"rust/Cargo.toml": '[workspace.package]\nlicense = "MIT"\n'}
+        self.assertEqual(self.resolve(files, "rust/crates/cli", {}),
+                         {"license": "MIT"})
+
+    def test_repo_root_workspace(self) -> None:
+        files = {"Cargo.toml": '[workspace.package]\nlicense = "MIT"\n'}
+        self.assertEqual(self.resolve(files, "crates/cli", {}), {"license": "MIT"})
+
+    def test_package_workspace_key_is_followed(self) -> None:
+        files = {"elsewhere/Cargo.toml": '[workspace.package]\nlicense = "ISC"\n'}
+        self.assertEqual(
+            self.resolve(files, "crates/cli", {"workspace": "../../elsewhere"}),
+            {"license": "ISC"})
+
+    def test_no_workspace_is_empty(self) -> None:
+        self.assertEqual(self.resolve({}, "crates/cli", {}), {})
+
+
 class DefaultTestCommandTest(unittest.TestCase):
     def test_uses_binary(self) -> None:
         self.assertEqual(arf.default_test_command("amb"), "#{bin}/amb --version")

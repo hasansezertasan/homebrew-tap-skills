@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import http.client
+import posixpath
 import re
 import shutil
 import subprocess
@@ -114,6 +115,46 @@ def binary_names(manifest: dict, package_name: str,
     names = [b["name"] for b in manifest.get("bin", []) if b.get("name")]
     names += [n for n in (implicit or []) if n not in names]
     return names or [package_name]
+
+
+def gated_binary(manifest: dict, binary: str) -> list[str]:
+    """Return the ``required-features`` of the ``[[bin]]`` named ``binary``.
+
+    Cargo silently skips a binary whose required features are off, so
+    ``cargo install`` could exit 0 with nothing installed.
+    """
+    for table in manifest.get("bin", []):
+        if table.get("name") == binary:
+            return list(table.get("required-features") or [])
+    return []
+
+
+def workspace_package_table(owner: str, repo: str, tag: str, crate_dir: str,
+                            package: dict) -> dict:
+    """Return the root's ``[workspace.package]`` for the member at ``crate_dir``.
+
+    Cargo follows ``package.workspace`` when set, otherwise the nearest ancestor
+    ``Cargo.toml`` that declares ``[workspace]``; that is not always the repo root.
+    """
+    raw = f"https://raw.githubusercontent.com/{owner}/{repo}/{tag}/"
+    explicit = package.get("workspace")
+    if isinstance(explicit, str):
+        candidates = [posixpath.normpath(posixpath.join(crate_dir, explicit))]
+    else:
+        parts = crate_dir.split("/") if crate_dir else []
+        candidates = ["/".join(parts[:i]) for i in range(len(parts) - 1, -1, -1)]
+    for directory in candidates:
+        directory = "" if directory == "." else directory
+        try:
+            root = tomllib.loads(fetch_text(
+                f"{raw}{directory + '/' if directory else ''}Cargo.toml"))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                continue
+            raise
+        if "workspace" in root:
+            return root["workspace"].get("package", {})
+    return {}
 
 
 def inherited(package: dict, key: str, workspace_package: dict) -> str:
@@ -285,13 +326,11 @@ def main() -> None:
         sys.exit(f"error: {manifest_path} has no [package] (a workspace root?); "
                  "pass --path to the member crate that builds the CLI")
 
-    # Fetch the workspace root only when a field is inherited from it. A member's
-    # root is the repo's top-level manifest in the common layout.
+    # Fetch the workspace root only when a field is inherited from it.
     workspace_package: dict = {}
     if any(isinstance(package.get(k), dict) for k in ("license", "description")):
-        root_manifest = manifest if not args.path else tomllib.loads(fetch_text(
-            f"https://raw.githubusercontent.com/{owner}/{repo}/{tag}/Cargo.toml"))
-        workspace_package = root_manifest.get("workspace", {}).get("package", {})
+        workspace_package = workspace_package_table(
+            owner, repo, tag, (args.path or "").strip("/"), package)
     binaries = binary_names(manifest, package["name"], implicit_binaries(
         owner, repo, tag, (args.path or "").strip("/"), package["name"]))
     name = normalize(args.name or binaries[0])
@@ -301,6 +340,12 @@ def main() -> None:
         class_name(name)
     except ValueError as exc:
         sys.exit(f"error: {exc}")
+    features = gated_binary(manifest, binaries[0])
+    if features:
+        sys.exit(f"error: binary {binaries[0]!r} needs cargo features "
+                 f"({', '.join(features)}); `cargo install` would skip it. Add "
+                 "them to the formula's std_cargo_args by hand, or pick another "
+                 "binary")
     if len(binaries) > 1:
         print(f"warning: the crate builds several binaries ({', '.join(binaries)}); "
               f"the smoke test uses {binaries[0]!r} — check the others install",

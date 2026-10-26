@@ -83,7 +83,7 @@
           "text": "Runs brew create with --tap <owner>/<tap> and --go (never without --tap, never hand-writes the formula), and does not use add_formula.py or add_cask.py."
         },
         {
-          "text": "Treats the output as a skeleton: replaces the placeholder test, sets desc, homepage and license, adds a livecheck block, and removes the generated comment header and Go's deny_network_access!/fetch."
+          "text": "Treats the output as a skeleton: replaces the placeholder test, sets desc, homepage and license, adds a livecheck block, and removes the generated comment header while keeping Go's generated fetch method and deny_network_access!."
         },
         {
           "text": "Keeps a single top-level url and sha256 so the tap's brew bump-formula-pr update workflow can maintain it."

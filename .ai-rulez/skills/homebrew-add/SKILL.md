@@ -102,7 +102,7 @@ HOMEBREW_EDITOR=true brew create --tap <owner>/<tap> --node --set-name <name> \
 
 `--tap` is mandatory: without it the file lands in homebrew-core. The tap must be
 tapped (`brew tap <owner>/<tap>`; if Homebrew refuses an untrusted tap, trust it with
-`brew trust`). The file is written under `$(brew --repository <owner>/<tap>)/Formula`;
+`brew trust --tap <owner>/<tap>`). The file is written under `$(brew --repository <owner>/<tap>)/Formula`;
 copy it into the checkout when that is not the checkout itself.
 `HOMEBREW_EDITOR=true` stops it opening an editor. Use a tag archive URL: for a
 GitHub URL `brew create` also reads the description, homepage and license from the
@@ -118,8 +118,10 @@ The output is a skeleton, not a finished formula. Always:
 - Add a `livecheck` block: `url :stable` with `strategy :github_latest` for a GitHub
   release or tag archive; confirm with `brew livecheck <tap>/<name>`. The tap's
   update workflows find new versions through it.
-- Go and Rust: remove the generated `deny_network_access!` and `fetch` method if
-  present; `std_go_args` and `std_cargo_args` build without them.
+- Go and Rust: keep the generated `fetch` method (`go mod download`, `cargo fetch`)
+  and `deny_network_access!`. Homebrew runs `fetch` with network access and then
+  runs `install` offline, so removing `fetch` alone leaves the build unable to
+  download its modules or crates.
 - Rust: in a workspace the template builds the repo root; pass `path:` to
   `std_cargo_args` for the member crate, and check the crate really has a binary and
   is not feature-gated (`required-features`), since `cargo install` skips one.

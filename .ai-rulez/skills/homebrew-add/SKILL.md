@@ -115,9 +115,13 @@ The output is a skeleton, not a finished formula. Always:
   with "A" or "An"), `homepage` and an SPDX `license`.
 - Replace `system "false"` in `test do` with a real check, such as
   `assert_match version.to_s, shell_output("#{bin}/<name> --version")`.
-- Add a `livecheck` block: `url :stable` with `strategy :github_latest` for a GitHub
-  release or tag archive; confirm with `brew livecheck <tap>/<name>`. The tap's
-  update workflows find new versions through it.
+- Add a `livecheck` block, choosing the strategy by how upstream publishes versions:
+  `url :stable` alone for a GitHub tag archive (Homebrew's Git strategy reads the
+  tags), and `strategy :github_latest` only when the project publishes GitHub
+  Releases and its tags are not a reliable stream (pre-release tags, tags without a
+  release). `github_latest` on a tags-only repository finds nothing, and the update
+  workflows treat that as "up to date", so new versions are never proposed. Confirm
+  with `brew livecheck <tap>/<name>`: it must report a version.
 - Go and Rust: keep the generated `fetch` method (`go mod download`, `cargo fetch`)
   and `deny_network_access!`. Homebrew runs `fetch` with network access and then
   runs `install` offline, so removing `fetch` alone leaves the build unable to

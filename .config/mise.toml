@@ -1,5 +1,5 @@
 [tools]
-python = "3.15.0"
+python = "3.15.2"
 # Not used by tasks here: the version Renovate tracks. The homebrew-tap-setup
 # skill ships its own copy of this pin; tests/test_copier_pin.py keeps them equal.
 "pipx:copier" = "9.19.1"

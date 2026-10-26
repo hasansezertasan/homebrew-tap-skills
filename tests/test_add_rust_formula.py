@@ -93,12 +93,46 @@ class RenderTest(unittest.TestCase):
         self.assertIn('*std_cargo_args(path: "crates/cli")', out)
         self.assertNotIn("*std_cargo_args, path", out)
 
+    def test_simple_license_is_a_string(self) -> None:
+        self.assertIn('  license "MIT"\n', self.render())
+
+    def test_or_license_becomes_any_of(self) -> None:
+        out = self.render(license_id="MIT OR Apache-2.0")
+        self.assertIn('license any_of: ["MIT", "Apache-2.0"]', out)
+
+    def test_and_license_becomes_all_of(self) -> None:
+        out = self.render(license_id="MIT AND Zlib")
+        self.assertIn('license all_of: ["MIT", "Zlib"]', out)
+
     def test_test_command_keeps_bin_interpolation(self) -> None:
         self.assertIn('shell_output("#{bin}/amb --version")', self.render())
 
     def test_untrusted_desc_is_escaped(self) -> None:
         out = self.render(desc='x" #{system "id"}')
         self.assertIn('desc "x\\" \\#{system \\"id\\"}"', out)
+
+
+class ImplicitBinariesTest(unittest.TestCase):
+    def test_src_bin_dir_needs_main_rs(self) -> None:
+        listings = {
+            "src": [],
+            "src/bin": [{"name": "w.rs", "type": "file"},
+                        {"name": "helpers", "type": "dir"},
+                        {"name": "tool", "type": "dir"}],
+            "src/bin/helpers": [{"name": "lib.rs", "type": "file"}],
+            "src/bin/tool": [{"name": "main.rs", "type": "file"}],
+        }
+
+        def fake(url: str):
+            return listings[url.split("/contents/")[1].split("?")[0]]
+
+        original = arf.fetch_json
+        arf.fetch_json = fake
+        try:
+            self.assertEqual(arf.implicit_binaries("o", "r", "v1", "", "pkg"),
+                             ["w", "tool"])
+        finally:
+            arf.fetch_json = original
 
 
 class DefaultTestCommandTest(unittest.TestCase):

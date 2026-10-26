@@ -97,7 +97,9 @@ def implicit_binaries(owner: str, repo: str, tag: str, crate_dir: str,
     for entry in listing(f"{prefix}src/bin"):
         if entry["type"] == "file" and entry["name"].endswith(".rs"):
             found.append(entry["name"].removesuffix(".rs"))
-        elif entry["type"] == "dir":
+        elif entry["type"] == "dir" and any(
+                e["name"] == "main.rs"
+                for e in listing(f"{prefix}src/bin/{entry['name']}")):
             found.append(entry["name"])
     return found
 
@@ -152,6 +154,24 @@ def default_test_command(binary: str) -> str:
     return f"#{{bin}}/{binary} --version"
 
 
+def license_literal(license_id: str) -> str:
+    """Return the Ruby argument for ``license``.
+
+    Homebrew's DSL has no string form for compound expressions: ``MIT OR
+    Apache-2.0`` must be ``any_of: ["MIT", "Apache-2.0"]``. Handle a flat
+    ``OR``/``AND`` list; anything more intricate (parentheses, ``WITH``, mixed
+    operators) keeps the verbatim string so ``brew audit`` flags it for a human.
+    """
+    tokens = license_id.split()
+    operators = {t.upper() for t in tokens[1::2]}
+    if len(tokens) > 1 and operators in ({"OR"}, {"AND"}) and not any(
+            "(" in t or ")" in t for t in tokens):
+        key = "any_of" if operators == {"OR"} else "all_of"
+        ids = ", ".join(f'"{_rb_str(t)}"' for t in tokens[::2])
+        return f"{key}: [{ids}]"
+    return f'"{_rb_str(license_id)}"'
+
+
 def render(name: str, url: str, sha: str, desc: str, homepage: str,
            license_id: str, test_command: str, path: str | None = None) -> str:
     """Render the Ruby formula source."""
@@ -164,7 +184,7 @@ def render(name: str, url: str, sha: str, desc: str, homepage: str,
         f'  homepage "{_rb_str(homepage)}"',
         f'  url "{_rb_str(url)}"',
         f'  sha256 "{_rb_str(sha)}"',
-        f'  license "{_rb_str(license_id)}"',
+        f"  license {license_literal(license_id)}",
         "",
         "  livecheck do",
         "    url :stable",

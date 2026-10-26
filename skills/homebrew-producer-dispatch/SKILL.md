@@ -16,7 +16,7 @@ and `update-cask-dispatch.yml`, in the tap. Take the event types, the payload ke
 and the validation patterns from them instead of from this skill. Derive the tap
 repository, `owner/homebrew-<tap>`, from the `origin` remote or an explicit
 override. The dispatch endpoint needs that full repository name, so do not use the
-short `owner/<tap>` name that `homebrew-add`'s `scripts/tap_name.py` prints.
+short `owner/<tap>` name that `brew tap` and `brew create --tap` use.
 
 Ask the user for these first; infer none of them, and do not assume PyPI:
 
@@ -73,8 +73,8 @@ Only for `none`. Ask the user for the rest, again inferring none of it:
 
 Render the job with the script; do not hand-write it, so every producer carries
 the same job. The event types and payload keys it writes are the receivers' own,
-read from the tap above; it ships here, like the scaffolders, so check its output
-against the receivers rather than trusting either blindly.
+read from the tap above; it ships here, so check its output against the receivers
+rather than trusting either blindly.
 
 ```sh
 python3 <skill-dir>/scripts/bump_job.py formula hwid --tap "$TAP_REPO" \

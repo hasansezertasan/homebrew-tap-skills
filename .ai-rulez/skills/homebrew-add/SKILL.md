@@ -131,10 +131,9 @@ The output is a skeleton, not a finished formula. Always:
   is not feature-gated (`required-features`), since `cargo install` skips one.
 - Add `depends_on` for libraries and tools the build needs, and pass any
   `./configure` or `cmake` options the project requires.
-- Keep exactly one top-level `url` and `sha256`. The update workflows bump with
-  `brew bump-formula-pr`, which edits only that pair: a formula with per-platform
-  `url` stanzas inside `on_macos`/`on_arm` blocks fails with `Could not find 'url'
-  stanza!` and is skipped, so it never updates.
+- Keep exactly one top-level `url` and `sha256` unless the tap's update workflows
+  handle more (see "Per-platform binary archives"): `brew bump-formula-pr` edits
+  only that pair.
 
 Then run `brew audit --strict --online <tap>/<name>`, `brew install
 --build-from-source <tap>/<name>` and `brew test <tap>/<name>`, and continue with
@@ -142,13 +141,16 @@ Then run `brew audit --strict --online <tap>/<name>`, `brew install
 
 ## Per-platform binary archives
 
-No scaffolder covers a CLI that ships one archive per OS and architecture, and a
-formula is the wrong shape for it. Do not hand-write a formula with `url` and
-`sha256` inside `on_macos`/`on_arm` blocks: `brew bump-formula-pr` edits only a
-top-level `url`, fails with `Could not find 'url' stanza!` (checked against
-Homebrew 7.0.11), and the update workflow then skips the formula with a warning,
-so it never updates. Homebrew has no support for per-platform formula bumps and no
-open plan for one.
+A CLI that ships one archive per OS and architecture does not fit a formula in the
+tap's default update flow. Read the tap's update workflows
+(`.github/workflows/update-formulas.yml` and `update-formula-dispatch.yml`) first.
+The template's bump formulae with `brew bump-formula-pr`, which edits only a
+top-level `url`: on a formula with `url` and `sha256` inside `on_macos`/`on_arm`
+blocks it fails with `Could not find 'url' stanza!` (checked against Homebrew
+7.0.11), and the workflow then skips the formula with a warning, so it never
+updates. Homebrew has no support for per-platform formula bumps and no open plan for
+one. If the tap's workflows have been changed to handle that shape, a formula is
+fine; otherwise do not write one.
 
 Prefer one of these, in this order:
 
@@ -157,7 +159,11 @@ Prefer one of these, in this order:
 2. **A cask shaped for `brew bump-cask-pr`:** one `url` template using `#{arch}`
    (and `#{os}` if Linux archives exist), `binary "<name>"` for the executable, and
    `sha256 arm: "...", intel: "..."` (Homebrew also reads `arm64_linux:` and
-   `x86_64_linux:` keys). Keep the stanzas flat, not nested in `on_macos`/`on_arm`
+   `x86_64_linux:` keys). The URL substitutions need their own stanzas, or the
+   components come out empty: define `arch arm: "<arm string>", intel: "<intel
+   string>"` with the strings the asset names use (`aarch64`/`x86_64`,
+   `arm64`/`amd64`) and, for Linux, `os macos: "<string>", linux: "<string>"` (Cask
+   Cookbook, "Handling different system configurations"). Keep the stanzas flat, not nested in `on_macos`/`on_arm`
    blocks, which `bump-cask-pr` leaves unchanged, and give it a real `livecheck`
    block (`url :url`, `strategy :github_latest`): `bump-cask-pr` refuses a cask whose
    livecheck is `skip`. Start from `add_cask.py` output or `brew create --cask --tap`

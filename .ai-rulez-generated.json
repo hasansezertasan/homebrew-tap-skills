@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:3cbce5e18893fe66edb43f08b748347edf8fccd7975fcfaa1362a4955d5819e1",
+  "source_hash": "blake3:7dbf2c95f1d825b21be2254b295af4cf129b41a9848e4fc8ee2b8a1ec1cb7571",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -23,7 +23,7 @@
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:054fa098cbb0134a82160be642ce8e116819499d6e071a3d3bb4c23ae2b4a654",
+      "content_hash": "blake3:9c269296a1eb8088d4dffad35b46cbaa4a0e270411e5b38c25d735b040fff57a",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {

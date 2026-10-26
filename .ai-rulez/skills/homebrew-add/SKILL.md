@@ -1,7 +1,7 @@
 ---
 type: Playbook
 title: Homebrew Add
-description: Use when adding a formula (PyPI Python CLI) or a cask (prebuilt macOS app from a GitHub release) to this Homebrew tap, including a project that ships both. Triggers include "add <package> as a formula", "add <repo> as a cask" and any request to package something in the tap. Always scaffold with the bundled scripts; never hand-write resource blocks and never use brew create.
+description: Use when adding a formula (PyPI Python CLI or Rust CLI built with cargo) or a cask (prebuilt macOS app from a GitHub release) to this Homebrew tap, including a project that ships both. Triggers include "add <package> as a formula", "add <repo> as a cask" and any request to package something in the tap. Always scaffold with the bundled scripts; never hand-write resource blocks and never use brew create.
 x-ai-rulez:
   kind: skill
   id: homebrew-add
@@ -14,13 +14,14 @@ x-ai-rulez:
 Read the [template contract](../../references/contract.md) for the task names and paths
 this skill relies on.
 
-Two scaffolders bundled with this skill do the tedious, error-prone part
+Three scaffolders bundled with this skill do the tedious, error-prone part
 (dependency trees, sha256 values, livecheck blocks); you make the judgment calls
 they cannot infer. Always scaffold with them: never hand-write resource blocks
 and never run `brew create`, which writes into homebrew-core, the wrong location.
 
 Run them from the tap checkout, or pass `--tap-dir <path>` / set
-`HOMEBREW_TAP_DIR`, as `python3 <skill-dir>/scripts/add_formula.py ...` and
+`HOMEBREW_TAP_DIR`, as `python3 <skill-dir>/scripts/add_formula.py ...`,
+`python3 <skill-dir>/scripts/add_rust_formula.py ...` and
 `python3 <skill-dir>/scripts/add_cask.py ...`. They need only the standard library
 and a `Formula/` or `Casks/` directory. The tap name used in printed audit
 commands and by `--check` comes from the `origin` remote with its `homebrew-`
@@ -29,12 +30,14 @@ prefix removed (`owner/homebrew-tap` is `owner/tap`); override it with
 
 ## Route by what upstream ships
 
-Decide from one question: is the thing installed a Python package from PyPI, or a
-prebuilt app bundle downloaded from GitHub Releases?
+Decide from one question: is the thing installed a Python package from PyPI, a Rust
+crate built from a GitHub release tag, or a prebuilt app bundle downloaded from
+GitHub Releases?
 
 | Upstream artifact | Kind | Script | Output |
 | --- | --- | --- | --- |
 | Python CLI on PyPI | formula | `add_formula.py <package>` | `Formula/<name>.rb` |
+| Rust CLI with a `Cargo.toml` and a GitHub release | formula | `add_rust_formula.py <owner>/<repo>` | `Formula/<name>.rb` |
 | Prebuilt macOS `.dmg`, `.pkg` or `.zip` on GitHub Releases | cask | `add_cask.py <owner>/<repo>` | `Casks/<name>.rb` |
 | Both a Python CLI and a prebuilt app | both | both scripts | both files |
 
@@ -80,6 +83,37 @@ Then verify what the scaffolder cannot infer:
 - **Names starting with a digit** (`2to3`) cannot be scaffolded: the Ruby class
   name would be invalid. Write that formula by hand with an explicit class name,
   and say so.
+
+## Rust formula
+
+```sh
+GITHUB_TOKEN="$(gh auth token)" python3 <skill-dir>/scripts/add_rust_formula.py <owner>/<repo>
+python3 <skill-dir>/scripts/add_rust_formula.py <owner>/<repo> --test-command '#{bin}/<name> version'
+python3 <skill-dir>/scripts/add_rust_formula.py <owner>/<repo> --path crates/cli --check
+```
+
+The scaffolder reads the latest release, fetches `Cargo.toml` at that tag, downloads
+the tag's source archive for the checksum, and writes a formula that builds from
+source (`depends_on "rust" => :build`, `cargo install *std_cargo_args`) with a
+`github_latest` livecheck. Building from source lets Homebrew bottle it and works on
+every platform Cargo supports; it never uses prebuilt release tarballs. The tap's
+update workflows bump it like any non-Python formula (`brew bump-formula-pr`, then
+audit, build and test), so no workflow change is needed. Then verify:
+
+- **Test command:** the default is `<binary> --version`. A TUI or daemon may not
+  exit on it; pass `--test-command` with something that does.
+- **Binary name:** the formula name is the first `[[bin]]` (or the package name).
+  Pass `--name` to override; a crate with several binaries gets a warning.
+- **Workspaces:** a root `Cargo.toml` without `[package]` is refused; pass `--path`
+  to the member crate that builds the CLI.
+- **System libraries:** add `depends_on` by hand when the crate links one (for
+  example `pkgconf` and `alsa-lib` on Linux for audio crates, `openssl@3`).
+- **`license "TODO-set-SPDX-license"`:** neither the manifest nor GitHub gave an
+  SPDX value; set it, as `brew audit --strict` rejects the marker.
+- **Rust floor:** the scaffolder prints the crate's `rust-version`; make sure
+  Homebrew's `rust` formula is at least that new.
+- **Prebuilt binaries only:** a project that publishes tarballs but whose source
+  will not build with cargo is not covered; write that formula by hand and say so.
 
 ## Cask
 

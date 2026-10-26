@@ -72,6 +72,29 @@
         "cask",
         "desk-exercise"
       ]
+    },
+    {
+      "id": "rust-formula-route",
+      "description": "Route a Rust CLI to the cargo formula scaffolder.",
+      "prompt": "I want to add 'widget', a Rust CLI at owner/widget with GitHub releases and a Cargo.toml, to this tap. Which command do I run and what do I check afterwards? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Runs the bundled add_rust_formula.py scaffolder, and does not use brew create, add_formula.py (PyPI) or add_cask.py, or hand-write the formula."
+        },
+        {
+          "text": "Says the formula builds from source with cargo and a rust build dependency, and checks the test command, system libraries, the SPDX license marker and the crate's Rust version floor."
+        },
+        {
+          "text": "Runs the README catalog regeneration (mise run generate-readme) and hands off to homebrew-verify before a PR."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "rust",
+        "desk-exercise"
+      ]
     }
   ]
 }

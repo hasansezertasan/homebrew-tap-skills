@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:01a17eda7dbbfd8c732e9d271f3dfbd3af7a374e5160d12ba55fd1dc2287d22b",
+  "source_hash": "blake3:ddd1418ad701610a3e70c475d878ce40df6be1a7b81a66800198060e938168b1",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -19,15 +19,15 @@
       "mode": "0644"
     },
     "package.json": {
-      "content_hash": "blake3:570ca574090c9a00b52f08b77d9fe9b8851ce4fc0c6a9dadd36c9bb2da3ddbee",
+      "content_hash": "blake3:44ea02bfe732c216772c8fffb0bc223190eb48932718706ed2474420cb93c3c8",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:902c09df068fc649d61029844b98e6015447c3b9e89aa97915170761fc0664ad",
+      "content_hash": "blake3:45e69ade66b5cf14982e4f58cb7ff67c130348a419256e37bedf8173f94e7df1",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {
-      "content_hash": "blake3:c4cc761a84dad542d13ee77470b1a21361dd91890550658049042fb66e0cceb5",
+      "content_hash": "blake3:a60285dee5e25b8841b2198eabddc311e0d8b96efd85e076c6d7c0cc85edcaa7",
       "mode": "0644"
     },
     "skills/homebrew-add/references/contract.md": {
@@ -41,6 +41,10 @@
     "skills/homebrew-add/scripts/add_formula.py": {
       "content_hash": "blake3:db2727964011eb8e4411ac2eb6288486cd2931c2c86b1cb608b1068905d3c45f",
       "mode": "0755"
+    },
+    "skills/homebrew-add/scripts/add_rust_formula.py": {
+      "content_hash": "blake3:cdfdfbd67dfffdaa8c346bf0e8b782bbf89de15534849c008ff2253adef13662",
+      "mode": "0644"
     },
     "skills/homebrew-add/scripts/tap_name.py": {
       "content_hash": "blake3:3be3fed5ce06445687e3ae7a30b8102df4c9ba004397aac955ba6cffa11f5210",

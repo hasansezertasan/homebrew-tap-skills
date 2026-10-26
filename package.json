@@ -16,6 +16,7 @@
     "skills/homebrew-add/references/contract.md",
     "skills/homebrew-add/scripts/add_cask.py",
     "skills/homebrew-add/scripts/add_formula.py",
+    "skills/homebrew-add/scripts/add_rust_formula.py",
     "skills/homebrew-add/scripts/tap_name.py",
     "skills/homebrew-add/scripts/url_fetch.py",
     "skills/homebrew-fix-formula/SKILL.md",

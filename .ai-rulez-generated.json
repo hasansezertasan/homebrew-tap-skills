@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:ddd1418ad701610a3e70c475d878ce40df6be1a7b81a66800198060e938168b1",
+  "source_hash": "blake3:a592a1d9f44dbcbef72a496021c8f9db6f7664b372d78416318517e3589d8a08",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -43,7 +43,7 @@
       "mode": "0755"
     },
     "skills/homebrew-add/scripts/add_rust_formula.py": {
-      "content_hash": "blake3:cdfdfbd67dfffdaa8c346bf0e8b782bbf89de15534849c008ff2253adef13662",
+      "content_hash": "blake3:d2c488a061c93f2adc0c6a8de4c998be42f1e281fd7c7356543c3e6025e4e8a9",
       "mode": "0644"
     },
     "skills/homebrew-add/scripts/tap_name.py": {

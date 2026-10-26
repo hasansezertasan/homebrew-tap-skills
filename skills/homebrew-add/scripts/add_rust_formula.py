@@ -33,6 +33,9 @@ from tap_name import tap_root
 
 GITHUB_API = "https://api.github.com"
 
+# `brew audit --strict` rejects a desc this long or longer.
+MAX_DESC = 80
+
 
 def fetch_json(url: str) -> dict:
     """Fetch and decode a JSON document from the GitHub API, failing loudly."""
@@ -53,6 +56,15 @@ def sha256_of(url: str) -> str:
         for chunk in iter(lambda: response.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def reachable(url: str) -> bool:
+    """Whether a homepage answers; ``brew audit --online`` rejects one that does not."""
+    try:
+        with url_fetch.open_url(url, accept="text/html"):
+            return True
+    except (urllib.error.URLError, OSError):
+        return False
 
 
 def binary_names(manifest: dict, package_name: str) -> list[str]:
@@ -222,9 +234,17 @@ def main() -> None:
     sha = sha256_of(url)
     desc = clean_desc(package.get("description") or meta.get("description")
                       or "TODO-set-description")
-    homepage = meta.get("homepage") or meta.get("html_url") \
-        or f"https://github.com/{owner}/{repo}"
+    repo_url = meta.get("html_url") or f"https://github.com/{owner}/{repo}"
+    homepage = meta.get("homepage") or repo_url
+    if homepage != repo_url and not reachable(homepage):
+        print(f"warning: homepage {homepage} is not reachable; using {repo_url}",
+              file=sys.stderr)
+        homepage = repo_url
     license_id = spdx_from_github(meta, manifest)
+    if len(desc) >= MAX_DESC:
+        print(f"warning: desc is {len(desc)} characters; `brew audit --strict` "
+              f"requires fewer than {MAX_DESC}. Shorten it by hand",
+              file=sys.stderr)
     test_command = args.test_command or default_test_command(binaries[0])
 
     root = tap_root(args.tap_dir)

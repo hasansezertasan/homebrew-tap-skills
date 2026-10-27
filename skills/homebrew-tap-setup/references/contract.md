@@ -48,8 +48,8 @@ layout, and offer adoption through `homebrew-tap-setup`.
 
 ## Conventions the workflows read
 
-- A formula scaffolded with `--extras` carries a `# homebrew-tap:extras=<a,b>`
-  comment. The update workflows pass it to `brew update-python-resources
+- A Python formula with extras carries a `# homebrew-tap:extras=<a,b>`
+  comment, written by hand when the formula is created. The update workflows pass it to `brew update-python-resources
   --package-name`; without it the first bump drops extras-only resources.
 - A formula that uses `virtualenv_install_with_resources` gets
   `brew update-python-resources` during updates; other formulae skip it.
@@ -63,10 +63,11 @@ layout, and offer adoption through `homebrew-tap-setup`.
 - The tap name comes from the repository name without its `homebrew-` prefix:
   `owner/homebrew-tap` is `owner/tap`.
 
-## Bundled with the plugin
+## Creating formulae and casks
 
-The scaffolders (`add_formula.py` and `add_cask.py`, with `tap_name.py`) ship
-inside the `homebrew-add` skill and run against the tap in the working directory
-(`--tap-dir` / `HOMEBREW_TAP_DIR`). They need the tap's `Formula/` or `Casks/`
-directory and, for `--check` or a printed audit command, the tap name from
-`origin`, `--tap` or `HOMEBREW_TAP`. They are not part of the tap.
+`homebrew-add` starts every formula and cask from `brew create --tap
+<owner>/<tap>`, so the tap must be tapped on the machine (`brew tap <owner>/<tap>
+<path>`) and trusted (`brew trust --tap <owner>/<tap>` for a tap you own, `brew trust --formula`
+for one formula of a tap you do not control) when Homebrew asks. The tap
+name is the `origin` remote without its `homebrew-` prefix. Nothing from the plugin
+is installed into the tap.

@@ -4,7 +4,7 @@
     {
       "id": "resource-drift-with-extras",
       "description": "Repair resources with brew update-python-resources while preserving the extras marker, then rebuild and verify.",
-      "prompt": "The weekly update bumped my formula 'widget' to a new version but a resource now fails to build. The formula was scaffolded with --extras tui. How do I repair it? This is a regression-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely and direct the reproducing and checking rather than doing it.",
+      "prompt": "The weekly update bumped my formula 'widget' to a new version but a resource now fails to build. The formula was created with the tui extra (it has a `# homebrew-tap:extras=tui` comment). How do I repair it? This is a regression-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely and direct the reproducing and checking rather than doing it.",
       "expect_trigger": true,
       "rubric_items": [
         {

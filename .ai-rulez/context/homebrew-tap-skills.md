@@ -28,17 +28,20 @@ interface live in `.ai-rulez/config.toml`; it has no literal version, which
   task name, path, or workflow filename there and in every skill that cites it,
   together.
 - Skills read the tap's workflows and README for exact behavior instead of
-  hardcoding flags; keep it that way. The scaffolders' own options, and the
-  event types and payload keys `homebrew-producer-dispatch`'s `bump_job.py`
-  writes, are the one exception, because they ship here; check them against the
-  tap's receivers.
-- Never scaffold with `brew create`: it writes into homebrew-core. Formulae and
-  casks come from the `homebrew-add` scaffolders.
+  hardcoding flags; keep it that way. The event types and payload keys
+  `homebrew-producer-dispatch`'s `bump_job.py` writes are the one exception,
+  because it ships here; check them against the tap's receivers.
+- Formulae and casks start from `brew create --tap <owner>/<tap>`, which
+  `homebrew-add` documents; never run `brew create` without `--tap`, which by
+  default writes into homebrew-core. Do not add a script to a skill for what a
+  Homebrew command already does: put what Homebrew's output lacks in the skill as
+  guidance.
 - Skills never edit `.gitignore` or other template-managed files by hand.
 - Tap setup renders the Copier template (`homebrew-tap-setup`); it never
   hand-writes template-managed files.
-- The `# homebrew-tap:extras=` comment the formula scaffolder writes is read by
-  the tap's update workflows. Change both sides together.
+- The `# homebrew-tap:extras=` comment a formula with extras carries is read by
+  the tap's update workflows, and `homebrew-add` tells the agent to write it by
+  hand. Change both sides together.
 - Maintainer governance stays in `AGENTS.md`, `CONTRIBUTING.md` and `docs/`;
   do not inject it into distributed skills.
 - Keep host-loaded paths (`.mcp.json`, `hooks/`, `agents/`, `commands/`) out of

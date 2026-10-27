@@ -42,8 +42,7 @@ in the repository that ships this skill.
 - There is one `bump-homebrew` job per producer, so a producer's formula job and a
   wanted cask job are a collision, reported as `other-kind-job`.
 - `bump_job.py` hardcodes the receivers' event types, payload keys and name pattern,
-  as the scaffolders hardcode their own options; the skill checks its output against
-  the receivers.
+  because it ships here; the skill checks its output against the receivers.
 - The script cannot tell whether a producer's release workflow is still shaped as
   the user described; the user supplies the job ids and expressions.
 - If `copier-pyproject` changes its job, this skill's job has to change with it;

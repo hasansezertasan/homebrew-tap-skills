@@ -3,12 +3,12 @@
   "cases": [
     {
       "id": "formula-vs-cask-route",
-      "description": "Choose formula or cask from what upstream publishes and use the bundled scaffolders, not brew create or hand-written resources.",
+      "description": "Choose formula or cask from what upstream publishes and start both from brew create --tap, not hand-written resources.",
       "prompt": "I want to add the tool 'widget' to this tap. Upstream publishes it on PyPI as a CLI and also ships a prebuilt macOS dmg on GitHub releases (owner/widget). Which commands do I run? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
       "expect_trigger": true,
       "rubric_items": [
         {
-          "text": "Runs the scaffolders bundled with the skill (add_formula.py and add_cask.py) from the tap checkout, and does not use brew create or hand-write a formula or resource blocks."
+          "text": "Starts the formula with brew create --tap <owner>/<tap> --python and the cask with brew create --cask --tap <owner>/<tap> (never brew create without --tap), and does not hand-write a formula or resource blocks."
         },
         {
           "text": "Makes both a formula and a cask because upstream ships both, and notes that the same name makes plain brew install ambiguous, so the README needs a --formula versus --cask note."
@@ -29,20 +29,20 @@
     {
       "id": "formula-human-checks",
       "description": "Name the generated fields a human must check on a new formula and preserve the extras marker.",
-      "prompt": "I scaffolded a formula for the PyPI package 'widget' with --extras tui. What do I still have to check before opening the PR? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "prompt": "I created a formula for the PyPI package 'widget' with brew create --python and added the tui extra with brew update-python-resources. What do I still have to check before opening the PR? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
       "expect_trigger": true,
       "rubric_items": [
         {
-          "text": "Says the test command is a guess (the generated test assumes --version) and must be checked against the real CLI, using --test-command when it differs."
+          "text": "Says the test is a guess or a placeholder (a --version assertion assumes the CLI answers it) and must be replaced with a real check against the actual CLI."
         },
         {
-          "text": "Flags the TODO-set-SPDX-license marker and system libraries as needing manual attention."
+          "text": "Flags a non-SPDX license value, desc, homepage, livecheck (strategy :pypi) and system libraries or toolchains as needing manual attention."
         },
         {
-          "text": "Explains the homebrew-tap:extras comment must be kept because the update workflows read it, otherwise the first bump drops extras-only resources."
+          "text": "Explains the homebrew-tap:extras=tui comment must be added and kept verbatim because the update workflows read it, otherwise the first bump drops extras-only resources."
         },
         {
-          "text": "Does not claim the formula is verified from scaffolding alone and defers audit, build and test evidence to homebrew-verify."
+          "text": "Does not claim the formula is verified from creation alone and defers audit, build and test evidence to homebrew-verify."
         }
       ],
       "tags": [
@@ -52,24 +52,73 @@
       ]
     },
     {
-      "id": "cask-pkg-and-seed",
+      "id": "cask-pkg-and-placeholder",
       "description": "Handle a pkg asset and a not-yet-released app correctly.",
       "prompt": "The upstream project ships its macOS app only as a .pkg, and a second project I want to add has no GitHub release yet. How do I add each as a cask? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
       "expect_trigger": true,
       "rubric_items": [
         {
-          "text": "Requires --pkg-id for the .pkg asset and explains that brew audit --cask --strict rejects a pkg stanza without uninstall pkgutil."
+          "text": "Adds an uninstall pkgutil stanza with the package identifier for the .pkg asset and explains that brew audit --cask --strict rejects a pkg stanza without it."
         },
         {
-          "text": "Uses --seed for the unreleased project and explains the placeholder version and checksum are filled by the first brew bump-cask-pr."
+          "text": "Starts the placeholder cask for the unreleased project from brew create --cask --tap with --no-fetch and --set-version 0.0.0, sets an all-zero sha256, and explains the first brew bump-cask-pr fills version and checksum but not the URL pattern."
         },
         {
-          "text": "Does not call the seeded cask installable or verified, and hands off to homebrew-verify."
+          "text": "Does not call the placeholder cask installable or verified, and hands off to homebrew-verify."
         }
       ],
       "tags": [
         "homebrew-add",
         "cask",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "brew-create-tap-route",
+      "description": "Route a Go or Rust CLI to brew create --tap and name the checks the skeleton needs.",
+      "prompt": "I want to add 'widget', a Go CLI at owner/widget with GitHub releases, to this tap. Which command do I run and what do I check afterwards? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Runs brew create with --tap <owner>/<tap> and --go (never without --tap), and does not hand-write the formula."
+        },
+        {
+          "text": "Treats the output as a skeleton: replaces the placeholder test, sets desc, homepage and license, adds a livecheck block, and removes the generated comment header while keeping Go's generated fetch method and deny_network_access!."
+        },
+        {
+          "text": "Keeps a single top-level url and sha256 so the tap's brew bump-formula-pr update workflow can maintain it."
+        },
+        {
+          "text": "Runs the README catalog regeneration (mise run generate-readme) and hands off to homebrew-verify before a PR."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "brew-create",
+        "desk-exercise"
+      ]
+    },
+    {
+      "id": "per-platform-binary-route",
+      "description": "Refuse a multi-url formula for per-platform binary archives and choose a bump-compatible route.",
+      "prompt": "The project owner/widget publishes widget-aarch64-apple-darwin.tar.gz, widget-x86_64-apple-darwin.tar.gz, widget-aarch64-unknown-linux-gnu.tar.gz and widget-x86_64-unknown-linux-gnu.tar.gz on GitHub releases and its source is a C program that needs a vendor SDK to build. I want to add it to this tap as a formula with on_macos and on_arm blocks, one url and sha256 per archive. What do you do? This is a desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Answer concretely.",
+      "expect_trigger": true,
+      "rubric_items": [
+        {
+          "text": "Checks the tap's update workflows (update-formulas.yml and update-formula-dispatch.yml) before deciding, and, assuming the template's brew bump-formula-pr path, does not write the per-platform on_macos/on_arm formula, explaining that brew bump-formula-pr only edits a top-level url so the workflow would skip it and never update it. A formula is acceptable only if the tap's workflows are confirmed to handle that shape."
+        },
+        {
+          "text": "Proposes a cask with binary, one url template using the architecture, sha256 arm:/intel: and a real livecheck block (not skip), kept flat so brew bump-cask-pr can update it; or a producer-published alternative with its caveats."
+        },
+        {
+          "text": "States that Linux support for casks and Linux hash keys are unverified and need testing before it is claimed."
+        }
+      ],
+      "tags": [
+        "homebrew-add",
+        "route",
+        "per-platform",
         "desk-exercise"
       ]
     }

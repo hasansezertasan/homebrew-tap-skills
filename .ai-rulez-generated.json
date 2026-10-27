@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:01a17eda7dbbfd8c732e9d271f3dfbd3af7a374e5160d12ba55fd1dc2287d22b",
+  "source_hash": "blake3:fbf6ab05a2370265395c3712c95bccbcd4763d44f3760818b1e484e29a636e41",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -19,39 +19,23 @@
       "mode": "0644"
     },
     "package.json": {
-      "content_hash": "blake3:570ca574090c9a00b52f08b77d9fe9b8851ce4fc0c6a9dadd36c9bb2da3ddbee",
+      "content_hash": "blake3:e0ae19da6b805116e89732aa793e23a2ec5e52b0a515de62bea80f3787a8aee3",
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:902c09df068fc649d61029844b98e6015447c3b9e89aa97915170761fc0664ad",
+      "content_hash": "blake3:b1428ae615e06c022cf1047dc0f6de2f00ffb466c874c3827ea60cf79500f48b",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {
-      "content_hash": "blake3:c4cc761a84dad542d13ee77470b1a21361dd91890550658049042fb66e0cceb5",
+      "content_hash": "blake3:afacc7a215caf15c65e22d28c5cb4191213d31da449c08f19c3fdfc6361d5543",
       "mode": "0644"
     },
     "skills/homebrew-add/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
-      "mode": "0644"
-    },
-    "skills/homebrew-add/scripts/add_cask.py": {
-      "content_hash": "blake3:5b47c10e882db274b85d85e6c7beb96455c79ec04e4e1994267a633397aefbcd",
-      "mode": "0755"
-    },
-    "skills/homebrew-add/scripts/add_formula.py": {
-      "content_hash": "blake3:db2727964011eb8e4411ac2eb6288486cd2931c2c86b1cb608b1068905d3c45f",
-      "mode": "0755"
-    },
-    "skills/homebrew-add/scripts/tap_name.py": {
-      "content_hash": "blake3:3be3fed5ce06445687e3ae7a30b8102df4c9ba004397aac955ba6cffa11f5210",
-      "mode": "0644"
-    },
-    "skills/homebrew-add/scripts/url_fetch.py": {
-      "content_hash": "blake3:a9caa747286660fc0566ccd36439050104ed75a01c2e6af8e6714e134b9197a5",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/SKILL.md": {
-      "content_hash": "blake3:907afb908f34e5d61f8ab0be2bd216d59032ec71818eaedf8826f5e846877af5",
+      "content_hash": "blake3:097cb4efcb164cfc4f82d84d169027a0cc8646654f5fa252df47fea277047a91",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/index.md": {
@@ -59,15 +43,15 @@
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/references/repair-cases.md": {
-      "content_hash": "blake3:e4d9cfd9e4997d693d749597df6a768592fd98705f31572510fb871ccee62645",
+      "content_hash": "blake3:698d79f78da768e7c89272847723fece5f4111b3ede3a2d3cae31140f7ede4eb",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/SKILL.md": {
-      "content_hash": "blake3:5849836d790652b7ffd63933a1c240d35494ba4f21d3f120d68b249c5615288f",
+      "content_hash": "blake3:7f4ef3270f64cbbb6bd693dfb1e641567713ceb41146f0d176588ad5be7e4709",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/agents/openai.yaml": {
@@ -79,11 +63,11 @@
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/references/dispatch-cases.md": {
-      "content_hash": "blake3:2f06754c9a4b86946b3b47a409166d92f0eb22d2f68a9112d0b4aebdb4aad77e",
+      "content_hash": "blake3:0a4a11b845c96b9903e65da5ac6e9b2fe19dcf319f418c8182e71106bacf4ea8",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/references/dispatch-report.md": {
@@ -111,7 +95,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/lifecycle-cases.md": {
@@ -119,7 +103,7 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/SKILL.md": {
-      "content_hash": "blake3:599f661e6cc49ad9cec4d7b336b147a221048c6d7a28ed7514bc00f546d0b0fb",
+      "content_hash": "blake3:ffe34b87583114791b22c421ad0e79aa94d2c6e830efa2e83361f6adc1274163",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/agents/openai.yaml": {
@@ -131,11 +115,11 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/setup-cases.md": {
-      "content_hash": "blake3:6965d7fe9481bd1f2be660692c080999950e6a0a712a98ab3404e28d64048c06",
+      "content_hash": "blake3:c614a2a2693b34b76ff17ce2d258c22a5cebfe64670a007b6750e119cf9ea553",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/setup-report.md": {
@@ -151,7 +135,7 @@
       "mode": "0644"
     },
     "skills/homebrew-update-triage/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-update-triage/references/triage-cases.md": {
@@ -163,7 +147,7 @@
       "mode": "0644"
     },
     "skills/homebrew-verify/SKILL.md": {
-      "content_hash": "blake3:bbc1bc2457a373006e173344a96cfd620e48cb2e3fddee0261211cfe59754729",
+      "content_hash": "blake3:7bfae63cdabca2ad802584c7e77e267cbe0b74e214d3f85de7261a45faade04f",
       "mode": "0644"
     },
     "skills/homebrew-verify/index.md": {
@@ -171,11 +155,11 @@
       "mode": "0644"
     },
     "skills/homebrew-verify/references/contract.md": {
-      "content_hash": "blake3:788b80e3321e6e779d04b1a2c4d1d5c81cdbbc8718e1fa182e1a09ebafa8590a",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-verify/references/verification-cases.md": {
-      "content_hash": "blake3:a948719ed0eadde2984128a178eb777e588222105c8e2ac61886de737524d096",
+      "content_hash": "blake3:1faf25b4ee60b8c26a75c8e3c222c52bd9a1197f9f02594ebc0381e6621bc4d9",
       "mode": "0644"
     },
     "skills/homebrew-verify/references/verification-report.md": {

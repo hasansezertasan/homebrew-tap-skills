@@ -7,7 +7,7 @@ remove and verify formulae and casks. This is a skills repository
 | Skill | Use |
 |---|---|
 | `homebrew-tap-setup` | set up a new tap from the copier-homebrew-tap template |
-| `homebrew-add` | add a PyPI formula or a prebuilt macOS app cask |
+| `homebrew-add` | add a PyPI or other source-built formula, or a prebuilt macOS app cask |
 | `homebrew-fix-formula` | repair livecheck, resources, checksums, audit failures and cask stanzas |
 | `homebrew-update-triage` | diagnose failing scheduled or dispatch updates |
 | `homebrew-producer-dispatch` | open a PR so a package's releases update this tap |
@@ -40,8 +40,9 @@ task-success result. Other agents can read `skills/<name>/SKILL.md`. See
 skills assume the layout in the
 [template contract](.ai-rulez/references/contract.md).
 
-The formula and cask scaffolders are part of `homebrew-add`
-(`skills/homebrew-add/scripts/`); a tap does not need to carry its own.
+`homebrew-add` starts formulae and casks from Homebrew's own `brew create --tap`
+and lists what the generated skeleton leaves for you to finish; a tap does not need
+to carry any scaffolding of its own.
 
 ## Development
 

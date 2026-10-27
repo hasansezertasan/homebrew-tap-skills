@@ -165,8 +165,10 @@ Prefer one of these, in this order:
    `arm64`/`amd64`) and, for Linux, `os macos: "<string>", linux: "<string>"` (Cask
    Cookbook, "Handling different system configurations"). Keep the stanzas flat, not nested in `on_macos`/`on_arm`
    blocks, which `bump-cask-pr` leaves unchanged, and give it a real `livecheck`
-   block (`url :url`, `strategy :github_latest`): `bump-cask-pr` refuses a cask whose
-   livecheck is `skip`. Start from `add_cask.py` output or `brew create --cask --tap`
+   block: `bump-cask-pr` refuses a cask whose livecheck is `skip`. Choose the URL and
+   strategy from how upstream publishes versions (`url :url` with `strategy
+   :github_latest` when the project publishes suitable GitHub Releases; otherwise
+   the tag or page strategy that `brew livecheck` confirms). Start from `add_cask.py` output or `brew create --cask --tap`
    and reshape it. Bumping with the `arm:`/`intel:` hash pair is covered by
    Homebrew's own specs; Linux hash keys and installing casks on Linux are not
    verified, so test on Linux before claiming support.

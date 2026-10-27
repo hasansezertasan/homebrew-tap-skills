@@ -106,7 +106,7 @@
       "expect_trigger": true,
       "rubric_items": [
         {
-          "text": "Does not write the per-platform on_macos/on_arm formula, and explains that brew bump-formula-pr only edits a top-level url so the tap's update workflow would skip it and never update it."
+          "text": "Checks the tap's update workflows (update-formulas.yml and update-formula-dispatch.yml) before deciding, and, assuming the template's brew bump-formula-pr path, does not write the per-platform on_macos/on_arm formula, explaining that brew bump-formula-pr only edits a top-level url so the workflow would skip it and never update it. A formula is acceptable only if the tap's workflows are confirmed to handle that shape."
         },
         {
           "text": "Proposes a cask with binary, one url template using the architecture, sha256 arm:/intel: and a real livecheck block (not skip), kept flat so brew bump-cask-pr can update it; or a producer-published alternative with its caveats."

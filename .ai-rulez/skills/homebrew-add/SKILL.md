@@ -102,8 +102,10 @@ HOMEBREW_EDITOR=true brew create --tap <owner>/<tap> --node --set-name <name> \
 
 `--tap` is mandatory: without it the file lands in homebrew-core. The tap must be
 tapped (`brew tap <owner>/<tap>`; if Homebrew refuses an untrusted tap, trust it with
-`brew trust --tap <owner>/<tap>`). The file is written under `$(brew --repository <owner>/<tap>)/Formula`;
-copy it into the checkout when that is not the checkout itself.
+`brew trust --tap <owner>/<tap>`). The file is written under
+`$(brew --repository <owner>/<tap>)/Formula`. Finish and validate it there: the audit,
+install and test commands below resolve that installed copy, not your checkout. Then
+copy the finished file into the checkout when that is not the checkout itself.
 `HOMEBREW_EDITOR=true` stops it opening an editor. Use a tag archive URL: for a
 GitHub URL `brew create` also reads the description, homepage and license from the
 API; for any other URL it leaves them empty. It downloads the URL for the checksum.

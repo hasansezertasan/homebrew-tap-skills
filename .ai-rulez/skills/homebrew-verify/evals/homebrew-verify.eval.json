@@ -29,7 +29,7 @@
     {
       "id": "seeded-cask-not-verified",
       "description": "A seeded placeholder cask is not installable and must not be reported as verified.",
-      "prompt": "I added a cask with --seed because the project has no release yet. cask-audit is green on the PR. Can I call it verified? This is a workflow-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Give a concrete verification report.",
+      "prompt": "I hand-wrote a placeholder cask (version 0.0.0, all-zero sha256) because the project has no release yet. cask-audit is green on the PR. Can I call it verified? This is a workflow-derived desk exercise: do not edit the repo, run installs, or perform network requests. No tap checkout is available in this session, so do not search for one: answer from the skill's guidance and name the tap files, scripts and workflow jobs you would inspect. Give a concrete verification report.",
       "expect_trigger": true,
       "rubric_items": [
         {

@@ -30,9 +30,9 @@ separates observed workflow behavior from workflow-derived examples.
 - **Formulae:** confirm `desc` is capitalized with no trailing period, `license`
   is a real SPDX identifier (not `TODO-set-SPDX-license`), `livecheck` is present
   (`url :stable`, `strategy :pypi`), and the `test do` block runs the CLI's real
-  smoke command. When the formula was scaffolded with extras, confirm the
+  smoke command. When the formula was created with extras, confirm the
   `# homebrew-tap:extras=` comment is intact, because the update workflows read it.
-  Resources must come from `brew update-python-resources` or the scaffolder, never
+  Resources must come from `brew create --python` or `brew update-python-resources`, never
   hand-edited.
 - **Casks:** confirm the version-templated URL, the checksum for the exact
   asset, the `app` bundle name or `pkg` plus `uninstall pkgutil:`, `depends_on`

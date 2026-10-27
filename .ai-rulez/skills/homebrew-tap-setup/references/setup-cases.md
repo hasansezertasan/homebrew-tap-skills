@@ -22,13 +22,13 @@ proof of a template, token or formula incident.
 | Questions, defaults, template root, post-copy message | `copier.yml` |
 | Rendered answers record used by `copier update` | `template/.copier-answers.yml.jinja` |
 | What the rendered setup checklist says (read-only default permissions, PR-creation setting) | `template/README.md.jinja`, Setup / Automated updates |
-| Tap name derivation (`owner/homebrew-x` to `owner/x`) | the `homebrew-add` skill's `scripts/tap_name.py`; each workflow's `${repository#homebrew-}` step |
+| Tap name derivation (`owner/homebrew-x` to `owner/x`) | each workflow's `${repository#homebrew-}` step |
 | Token use and PR creation | `template/.github/workflows/update-formulas.yml`, `update-casks.yml`, `update-formula-dispatch.yml`, `update-cask-dispatch.yml` (`token: ${{ secrets.GITHUB_TOKEN }}`) |
 | Dispatch payloads and anchored validation | `update-formula-dispatch.yml` and `update-cask-dispatch.yml`, "Validate payload" |
 | Failure issue | `update-cask-dispatch.yml`, "Report failure" (Issues: write) |
 | Bottle build and tap-syntax gate | `template/.github/workflows/tests.yml`, `syntax`, `formulae` and `cask-audit` jobs |
 | Bottle publication | `template/.github/workflows/publish.yml` (`pull_request_target`, label `pr-pull`) |
-| First-item scaffolders and verification ownership | the `homebrew-add` and `homebrew-verify` skills |
+| Adding the first item and verification ownership | the `homebrew-add` and `homebrew-verify` skills |
 | Local check coverage | `template/.config/mise.toml`, `check` |
 | PR title and branch-name lint | `template/.github/workflows/check-pr-title.yml`, `check-branch-name.yml` |
 | Template renders and its own gate passes | `.github/workflows/template.yml` |
@@ -65,13 +65,13 @@ settings, secrets and branch policy, which the template does not configure. Keep
 identity neutral and continue with `homebrew-add` then `homebrew-verify`; do not
 invent a formula.
 
-### B. Correct origin, stale `HOMEBREW_TAP` override
+### B. Remote name that gives no usable tap name
 
-Tap identity resolves from `HOMEBREW_TAP`, then the `origin` remote
-(`tap_name.py`, `resolve`), so a stale override silently wins over a correct
-remote. A remote without the `homebrew-` prefix yields `owner/repo` unchanged, a
-name `brew tap` cannot resolve. Check the environment and the remote separately
-before trusting generated names. A successful scaffold does not prove the tap is
+The tap name `brew create --tap` and `brew tap` take is the `origin` remote without
+its `homebrew-` prefix (`owner/homebrew-tap` is `owner/tap`). A remote without the
+prefix gives `owner/repo`, a name `brew tap` cannot resolve, and a name copied from
+another tap or an earlier session may point at the wrong owner. Check the remote
+before trusting a tap name. A successful `brew create` does not prove the tap is
 installable: that needs the files pushed and a `brew tap` plus install from the
 remote, which a local run does not show.
 

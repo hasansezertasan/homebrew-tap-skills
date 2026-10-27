@@ -116,7 +116,7 @@ rather than escalating privileges speculatively.
 ## 4. Prepare the first formula or cask
 
 Run `mise install` in the rendered tap. Invoke `homebrew-add` to select and
-scaffold the first item; do not hand-write Ruby or invent a demo package.
+add the first item (it uses `brew create --tap`); do not hand-write Ruby or invent a demo package.
 `homebrew-add` delegates its gate to `homebrew-verify`. Take PR scope and
 branch conventions from the tap's own instructions.
 

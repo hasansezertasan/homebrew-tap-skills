@@ -8,12 +8,12 @@ name: homebrew-fix-formula
 Read the [template contract](references/contract.md) for the task names and paths
 this skill relies on.
 
-Repair the affected item without re-scaffolding over curated metadata. Derive tap
+Repair the affected item without regenerating over curated metadata. Derive tap
 identity from `origin`, the Actions context or an explicit `HOMEBREW_TAP`. Read the
 Ruby file, the relevant update workflow, and the upstream release or PyPI
 release before editing. Read [references/repair-cases.md](references/repair-cases.md)
 for repository evidence and the update workflows' limits; its examples are
-derived from the workflows and scaffolder tests, not recorded failed installs.
+derived from the workflows and Homebrew's behaviour, not recorded failed installs.
 
 ## 1. Reproduce and classify
 
@@ -94,9 +94,9 @@ intentionally skipped, and never fabricate a digest.
 Fix the specific audit message. Frequent ones: a description that is not
 capitalized or ends in a period, a non-SPDX license, a `test do` that assumes
 `--version` when the CLI differs, missing `depends_on` for a system library.
-Prefer the scaffolder's conventions; if the fix is regenerating, re-run
-`homebrew-add`'s scaffolder in a scratch location and port only the fields that
-changed rather than overwriting curated ones.
+Prefer the conventions in `homebrew-add`; if the fix is regenerating, run
+`brew create --tap` into a scratch tap (or compare against a fresh `brew create`
+output) and port only the fields that changed rather than overwriting curated ones.
 
 ## 7. Finish with homebrew-verify
 

@@ -67,6 +67,7 @@ layout, and offer adoption through `homebrew-tap-setup`.
 
 `homebrew-add` starts every formula and cask from `brew create --tap
 <owner>/<tap>`, so the tap must be tapped on the machine (`brew tap <owner>/<tap>
-<path>`) and trusted (`brew trust --tap <owner>/<tap>`) when Homebrew asks. The tap
+<path>`) and trusted (`brew trust --tap <owner>/<tap>` for a tap you own, `brew trust --formula`
+for one formula of a tap you do not control) when Homebrew asks. The tap
 name is the `origin` remote without its `homebrew-` prefix. Nothing from the plugin
 is installed into the tap.

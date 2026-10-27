@@ -41,7 +41,10 @@ HOMEBREW_EDITOR=true brew create --tap <owner>/<tap> --<kind> [--set-name <name>
 - **`--tap` is mandatory.** Without it the file lands in homebrew-core, the wrong
   location. `HOMEBREW_EDITOR=true` stops it opening an editor.
 - **The tap must be tapped** (`brew tap <owner>/<tap> <path-to-checkout>`). If Homebrew
-  refuses an untrusted tap, run `brew trust --tap <owner>/<tap>`. The file is written
+  refuses an untrusted tap, trust the tap you own with `brew trust --tap <owner>/<tap>`
+  (it authorizes every current and future formula, cask and command in it); for a tap
+  you do not control, trust only the one formula with `brew trust --formula
+  <owner>/<tap>/<name>`. The file is written
   under `$(brew --repository <owner>/<tap>)`. Finish and validate it there: the audit,
   install and test commands resolve that installed copy, not your checkout. Then copy
   the finished file into the checkout when that is not the checkout itself. The tap name is the origin remote without its `homebrew-`

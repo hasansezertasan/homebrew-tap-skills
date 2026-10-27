@@ -1,6 +1,6 @@
 {
   "schema_version": "v1",
-  "source_hash": "blake3:38a9ccbd58abba1d7e6bf377d36b0112ee63c794947762bbc8912ad60b759970",
+  "source_hash": "blake3:fbf6ab05a2370265395c3712c95bccbcd4763d44f3760818b1e484e29a636e41",
   "outputs": {
     ".agents/plugins/marketplace.json": {
       "content_hash": "blake3:e10f1a0c2bec2711cf6b85a31978a4acdc39b34c80133f2347e2ac08a7fc0465",
@@ -23,7 +23,7 @@
       "mode": "0644"
     },
     "skills/homebrew-add/SKILL.md": {
-      "content_hash": "blake3:a419c8fecca540466439de5989f5d06dda20d185fe1f43273a3a18b3e35cfa7d",
+      "content_hash": "blake3:b1428ae615e06c022cf1047dc0f6de2f00ffb466c874c3827ea60cf79500f48b",
       "mode": "0644"
     },
     "skills/homebrew-add/index.md": {
@@ -31,7 +31,7 @@
       "mode": "0644"
     },
     "skills/homebrew-add/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/SKILL.md": {
@@ -43,7 +43,7 @@
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-fix-formula/references/repair-cases.md": {
@@ -63,7 +63,7 @@
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-producer-dispatch/references/dispatch-cases.md": {
@@ -95,7 +95,7 @@
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-remove-or-deprecate/references/lifecycle-cases.md": {
@@ -115,7 +115,7 @@
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-tap-setup/references/setup-cases.md": {
@@ -135,7 +135,7 @@
       "mode": "0644"
     },
     "skills/homebrew-update-triage/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-update-triage/references/triage-cases.md": {
@@ -155,7 +155,7 @@
       "mode": "0644"
     },
     "skills/homebrew-verify/references/contract.md": {
-      "content_hash": "blake3:5c79acf0337ff5de90b19669cf6873a8517795600f5438ee9206710ccbd01022",
+      "content_hash": "blake3:2e67219d88609d74c6d3f50181ce29bd716bcc9b3a033a7793947ab1a1baebf7",
       "mode": "0644"
     },
     "skills/homebrew-verify/references/verification-cases.md": {

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/hasansezertasan/homebrew-tap-skills/compare/v0.2.0...v0.3.0) (2026-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **homebrew-add:** replace the bundled scaffolders with brew create --tap ([#27](https://github.com/hasansezertasan/homebrew-tap-skills/issues/27))
+
+### Code Refactoring
+
+* **homebrew-add:** replace the bundled scaffolders with brew create --tap ([#27](https://github.com/hasansezertasan/homebrew-tap-skills/issues/27)) ([f0d1cc0](https://github.com/hasansezertasan/homebrew-tap-skills/commit/f0d1cc012641188eacfa4360a72e3e917a52d7fe))
+
 ## [0.2.0](https://github.com/hasansezertasan/homebrew-tap-skills/compare/homebrew-tap-skills-v0.1.0...homebrew-tap-skills-v0.2.0) (2026-10-19)
 
 

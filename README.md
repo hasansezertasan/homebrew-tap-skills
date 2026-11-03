@@ -1,4 +1,3 @@
-<<<<<<< before updating
 # homebrew-tap-skills
 
 Agent skills for operating a Homebrew tap: set one up, then add, fix, triage,
@@ -56,30 +55,3 @@ npm run generate
 npm run check
 npm test
 ```
-=======
-# Homebrew Tap Skills
-
-[![skills.sh](https://skills.sh/b/hasansezertasan/homebrew-tap-skills)](https://skills.sh/hasansezertasan/homebrew-tap-skills)
-
-Skills for operating a Homebrew tap: set it up, then add, fix, triage, remove, and verify formulae and casks.
-
-## Install
-
-Supports Claude Code, Codex, OpenCode, Pi and Antigravity. See [docs/installation.md](docs/installation.md) for the steps for each runtime.
-
-## Skills
-
-The skills live in `.ai-rulez/skills/` and are published from the generated `skills/` directory. List them here.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## License
-
-MIT
-
-## Credits
-
-Generated from [copier-skill-repo](https://github.com/hasansezertasan/copier-skill-repo).
->>>>>>> after updating
